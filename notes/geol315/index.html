@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOL315 Hydrology - USC Notes | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.css"
+        integrity="sha384-pRsDYiLLocCzWnUN/YEr9TBTTaZOUi5x8adKfqi6Qt44lDaFkoP++x1j2ohSMtdf"
+        crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.js"
+        integrity="sha384-tMzugJpfLv7v0f+KXzNMqNCC6sVzLMM3sCnZDgzy0lcO/0h3sAkEBg/URFcV0JpE"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.addEventListener("load", function(event) {
+            $(".katex-math").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex);
+                $(this).html(html);
+            });
+            $(".katex-display").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex, {displayMode: true});
+                $(this).html(html);
+            });
+        });
+    </script>
+    <style>
+      img {
+        max-width: 100%;
+      }
+      div {
+        overflow-x: scroll;
+      }
+      div.container, div.container-small, div.katex-display, div.text-center {
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container-small">
+    <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      GEOL 315 Hydrology - Surface and Sub-Surface Processes
+    </h1>
+
+    <h2>Surface &amp; Near-Surface Processes Notes</h2>
+    <h2>Flux</h2>
+    <div class="katex-display">
+    q = {Q \over A}
+    </div>
+
+    <ul>
+    <li><span class="katex-math">q</span> = flux per unit area <span class="katex-math">[{\text{L} \over \text{T}}]</span></li>
+    <li><span class="katex-math">Q</span> = volumetric flux <span class="katex-math">[{\text{L}^3 \over \text{T}}]</span></li>
+    <li><span class="katex-math">A</span> = area <span class="katex-math">[\text{L}^2]</span></li>
+    </ul>
+    <hr />
+    <h2>Humidity</h2>
+    <dl>
+    <dt>Relative humidity</dt>
+    <dd>
+    <p><span class="katex-math">{\text{vapor pressure of water} \over \text{saturated vapor pressure}}</span></p>
+    </dd>
+    <dt>Absolute humidity</dt>
+    <dd>
+    <p><span class="katex-math">{\text{mass of water vapor} \over \text{volume of air}}</span></p>
+    </dd>
+    <dt>Specific humidity</dt>
+    <dd>
+    <p><span class="katex-math">{\text{mass of water vapor} \over \text{mass of air}}</span></p>
+    </dd>
+    <dt>Vapor Pressure</dt>
+    <dd>
+    <p>In air, each component exerts a partial pressure. <span class="katex-math">\Sigma</span> partial
+    pressures = atm pressure. Vapor pressure is the partial pressure of water
+    vapor.</p>
+    </dd>
+    <dt>Dew point</dt>
+    <dd>
+    <p>Temperature to which a parcel of air must be cooled to reach saturation.</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Causes of Rain</h2>
+    <dl>
+    <dt>Frontal</dt>
+    <dd>
+    <p>A warm and cold front collide, pushing the warm front up over the cold,
+    cooling it, and thus causing water vapor to condense out.</p>
+    </dd>
+    <dt>Convective</dt>
+    <dd>
+    <p>The ground surface, heated by the sun, causes convection, pushing warm,
+    moist air up, cooling it, and thus causing water vapor to condense out.</p>
+    </dd>
+    <dt>Orographic</dt>
+    <dd>
+    <p>As moist air is pushed up by a mountain range, it cools, causing water
+    vapor to condense out. When the air makes it to the other side of the
+    range, it has rained out a lot of its water, causing a dry &ldquo;rain shadow&rdquo;
+    region on the other side of the range.</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Infiltration</h2>
+    <p>Soil has a finite but variable capacity to absorb water. Infiltration capacity:</p>
+    <ul>
+    <li>Differs for different soils.</li>
+    <li>Differs depending on &ldquo;antecedent conditions&rdquo; (how wet it was beforehand).</li>
+    </ul>
+    <p>Dry: high infiltration capactity (high <em>tension</em> (?)).</p>
+    <ul>
+    <li><span class="katex-math">f_p</span> = infiltration capacity</li>
+    <li><span class="katex-math">f_o</span> = initial inf. cap.</li>
+    <li><span class="katex-math">f_e</span> = equilibrium inf. cap.</li>
+    </ul>
+    <p><img alt="Example Infiltration Graph" src="InfiltrationGraph.avif" /></p>
+    <hr />
+    <h2>The Hazen Method</h2>
+    <ol>
+    <li>
+    <p>Collect all the data.</p>
+    </li>
+    <li>
+    <p>Sort it; rank it (1 = highest).</p>
+    </li>
+    <li>
+    <p>Calculate the probability.</p>
+    <p><span class="katex-math">100 \times {2 n - 1 \over 2 y}</span></p>
+    <p>y = # of samples<br />
+    n = rank</p>
+    </li>
+    </ol>
+    <hr />
+    <h2><em>N</em>-<em>T</em> events</h2>
+    <p>New (correct) way to refer to floods or rainfall events: probability.</p>
+    <p>e.g. 1% chance rainfall event; 10% chance rainfall event</p>
+    <p>Old way:</p>
+    <p>&ldquo;100-yr flood&rdquo; <span class="katex-math">\to</span> 1% chance per year (<span class="katex-math">{1 \over 100}</span>)<br />
+    &ldquo;500-yr rainfall event&rdquo; <span class="katex-math">\to</span> 0.2% chance per year (<span class="katex-math">{1 \over 500}</span>)</p>
+    <h2>Retention Curves</h2>
+    <ul>
+    <li>Residual moisture content / Residual saturation</li>
+    <li>Air entry pressure / Capillary fringe</li>
+    </ul>
+    <p><img alt="Example Retention Curve" src="RetentionCurve.avif" /></p>
+    <h2>Densities</h2>
+    <ul>
+    <li>Quartz: <span class="katex-math">2650~\text{kg}/\text{m}^3</span></li>
+    <li>Water:  <span class="katex-math">1000~\text{kg}/\text{m}^3</span></li>
+    </ul>
+    <hr />
+    <hr />
+    <h2>Water <span class="katex-math">\to</span> Streams</h2>
+    <dl>
+    <dt>Baseflow</dt>
+    <dd>
+    <p>How much water flows in the stream when it&rsquo;s not raining.</p>
+    </dd>
+    <dt>Interflow</dt>
+    <dd>
+    <p>Downslope flow occuring between the ground surface and water table.</p>
+    </dd>
+    <dt>Overland flow</dt>
+    <dd>
+    <p>Downslope flow occuring along the ground surface.</p>
+    </dd>
+    <dt>Direct precipitation</dt>
+    <dd>
+    <p>Precipitation directly into the stream.</p>
+    </dd>
+    </dl>
+    <p><img alt="How does water get to streams?" src="WaterToStreams.avif" /></p>
+    <hr />
+    <h2>Hydrographs</h2>
+    <p><img alt="Example Hydrograph" src="Hydrograph.avif" /></p>
+    <hr />
+    <h2>Mineral Formulas</h2>
+    <dl>
+    <dt>Feldspar</dt>
+    <dd>
+    <p>&nbsp;<br />
+    Orthoclase:<br />
+    K-spar: KAlSi<span class="katex-math">_3</span>O<span class="katex-math">_8</span></p>
+    <p>Plagioclase:<br />
+    Na: NaAlSi<span class="katex-math">_3</span>O<span class="katex-math">_8</span><br />
+    Ca: CaAl<span class="katex-math">_2</span>Si<span class="katex-math">_2</span>O<span class="katex-math">_8</span></p>
+    </dd>
+    <dt>Quartz</dt>
+    <dd>SiO<span class="katex-math">_2</span></dd>
+    <dt>Limestone</dt>
+    <dd>CaCO<span class="katex-math">_3</span></dd>
+    <dt>Micas</dt>
+    <dd>&nbsp;<br />
+    Muscovite: KAl<span class="katex-math"><em 10="10">3</span>Si<span class="katex-math">_3</span>O<span class="katex-math"></em></span>(OH)<span class="katex-math"><em 10="10">2</span><br />
+    Biotite: K(Mg,Fe)<span class="katex-math">_3</span>(AlSi<span class="katex-math">_3</span>O<span class="katex-math"></em></span>)(OH)<span class="katex-math">_2</span></dd>
+    <dt>Clays</dt>
+    <dd>&nbsp;<br />
+    Kaolinite: Al<span class="katex-math">_2</span>Si<span class="katex-math">_2</span>O<span class="katex-math">_5</span>(OH)<span class="katex-math">_4</span></dd>
+    <dt>Hematite (Rust)</dt>
+    <dd>Fe<span class="katex-math">_2</span>O<span class="katex-math">_3</span></dd>
+    </dl>
+    <hr />
+    <h2>Ion Solubility/Mobility</h2>
+    <p>From most soluble/mobile to least:</p>
+    <ol>
+    <li>Ca<span class="katex-math">^{2+}</span>, Na<span class="katex-math">^+</span>, Mg<span class="katex-math">^{2+}</span> (depends on mineral)</li>
+    <li>K<span class="katex-math">^+</span></li>
+    <li>Fe<span class="katex-math">^{2+}</span></li>
+    <li>Si<span class="katex-math">^{4+}</span></li>
+    <li>Ti<span class="katex-math">^{4+}</span></li>
+    <li>Fe<span class="katex-math">^{3+}</span></li>
+    <li>Al<span class="katex-math">^{3+}</span></li>
+    </ol>
+    <hr />
+    <h2>Chemical Weathering</h2>
+    <h3>Dissolution</h3>
+    <dl>
+    <dt>Calcite</dt>
+    <dd>CaCO<span class="katex-math">_3</span> + H<span class="katex-math">_2</span>O <span class="katex-math">\to</span> Ca<span class="katex-math">^{2+}</span> + HCO<span class="katex-math">_3^-</span> + OH<span class="katex-math">^-</span></dd>
+    <dt>Quartz</dt>
+    <dd>SiO<span class="katex-math">_2</span> + 2H<span class="katex-math">_2</span>O <span class="katex-math">\to</span> H<span class="katex-math">_4</span>SiO<span class="katex-math">_4</span></dd>
+    </dl>
+    <h3>Hydrolysis</h3>
+    <dl>
+    <dt>K-spar to Kaolinite</dt>
+    <dd>&nbsp;<br />
+    2KAlSi<span class="katex-math">_3</span>O<span class="katex-math">_8</span> + 9H<span class="katex-math">_2</span>O + 2<span class="katex-math">H^+</span> <span class="katex-math">\to</span> Al<span class="katex-math">_2</span>Si<span class="katex-math">_2</span>O<span class="katex-math">_5</span>(OH)<span class="katex-math">_4</span><br />
+    &nbsp;<span class="katex-math">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span> + 2K<span class="katex-math">^+</span> + 4H<span class="katex-math">_4</span>SiO<span class="katex-math">_4</span></dd>
+    </dl>
+    <h3>Redox</h3>
+    <dl>
+    <dt>Hematite (Rust)</dt>
+    <dd>&nbsp;<br />
+    4Fe<span class="katex-math">^{2+}</span> + 8OH<span class="katex-math">^-</span> + O<span class="katex-math">_2</span> <span class="katex-math">\to</span> 2Fe<span class="katex-math">_2</span>O<span class="katex-math">_3</span> + 2H<span class="katex-math">_2</span>O</dd>
+    </dl>
+    <hr />
+    <h2>Mechanical Weathering</h2>
+    <dl>
+    <dt>1. Ice wedging</dt>
+    <dd>
+    <p>Liquid water enters a small crack in rock, freezes and expands, expanding
+    the crack, then thaws, flowing further into the expanded crack, allowing
+    more water in. When this freezes, it expands the crack even more. This
+    cycle repeats, continually expanding the crack.</p>
+    </dd>
+    <dt>2. Root wedging</dt>
+    <dd>
+    <p>Roots grow into a crack in rock. As the plant grows into the crack and
+    utilizes the minerals in the rock, it expands the crack and erodes its
+    walls.</p>
+    </dd>
+    <dt>3. Salt wedging</dt>
+    <dd>
+    <p>Salt water enters a crack in rock and evaporates, leaving behind salt
+    crystals. When heated, the crystals expand, expanding the crack. The salt
+    also helps chemically decompose the rock.</p>
+    </dd>
+    <dt>4. Abrasion</dt>
+    <dd>
+    <p>Weathering caused by friction between rocks during transport.</p>
+    </dd>
+    <dt>5. Unloading</dt>
+    <dd>
+    <p>The expansion of rock due to pressure release.</p>
+    </dd>
+    <dt>6. Thermal expansion</dt>
+    <dd>
+    <p>The expansion of rock due to heating.</p>
+    </dd>
+    <dt>7. Hydration &amp; swelling</dt>
+    <dd>
+    <p>The expansion of rock due to intake of water (chemical hydration).</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Soil Horizons</h2>
+    <dl>
+    <dt>O: humus</dt>
+    <dd>loose, decaying organics</dd>
+    <dt>A: topsoil</dt>
+    <dd>minerals mixed with organics</dd>
+    <dt>E: zone of leaching</dt>
+    <dd>mostly quartz sand and silt</dd>
+    <dt>B: subsoil</dt>
+    <dd>zone of accumulation of clays and iron minerals</dd>
+    <dt>C: weathered bedrock</dt>
+    <dd>mostly partially weathered bedrock material</dd>
+    </dl>
+    <p>The O horizon forms as organics fall to the ground and begin to decay. As they
+    begin to mix with the minerals in the soil, the A horizon is formed. The E
+    horizon is formed by clays and iron minerals being carried down by water to the
+    B horizon, leaving behind fine, light quartz deposits. The C horizon is the
+    lowest layer before the bedrock, and is formed by partially weathered bedrock
+    mixing with material from above.</p>
+    <hr />
+    <h2>Baseline Recession Curve</h2>
+    <div class="katex-display">
+    Q = Q_0 e^{-a t}
+    </div>
+
+    <hr />
+    <h2>Erosion by Water</h2>
+    <ul>
+    <li>Interrill<ul>
+    <li>Raindrop splash</li>
+    <li>Overland flow</li>
+    </ul>
+    </li>
+    <li>Rill<ul>
+    <li>Concentrated flow (steeper than interrill)</li>
+    </ul>
+    </li>
+    <li>Gully erosion<ul>
+    <li>Big channels</li>
+    <li>Carry water during &amp; immediately after rainfall.</li>
+    <li>Usually moves less sediment than rill or interrill erosion.</li>
+    </ul>
+    </li>
+    <li>Stream channel erosion<ul>
+    <li>Scour, bank failure</li>
+    </ul>
+    </li>
+    </ul>
+    <hr />
+    <h2>Strahler Stream Classification</h2>
+    <ul>
+    <li>
+    <p>If the node is a leaf (has no children), its Strahler number is one.</p>
+    </li>
+    <li>
+    <p>If the node has one child with Strahler number <span class="katex-math">i</span>, and all other children
+        have Strahler numbers less than <span class="katex-math">i</span>, the the Strahler number of the node is
+        <span class="katex-math">i</span> again.</p>
+    </li>
+    <li>
+    <p>If the node has two children with Strahler number <span class="katex-math">i</span>, and no children with
+        greater number, then the Strahler number of the node is <span class="katex-math">i + 1</span>.</p>
+    </li>
+    </ul>
+    <hr />
+    <h2>Stream Recovery Timescales</h2>
+    <p>Ordered from most sensitive to disturbance to least.</p>
+    <ol>
+    <li>Micro-Habitat (&lt;0.10cm): 1-10yr</li>
+    <li>Habitat (1-10m): 1-10yr</li>
+    <li>Reach (10-100m): 10-100yr</li>
+    <li>Floodplain (10<span class="katex-math">^2</span>-10<span class="katex-math">^3</span>m): 10<span class="katex-math">^3</span>-10<span class="katex-math">^4</span>yr</li>
+    <li>Watershed (10<span class="katex-math">^3</span>-10<span class="katex-math">^4</span>m): 10<span class="katex-math">^5</span>-10<span class="katex-math">^6</span>yr</li>
+    </ol>
+    <hr />
+    <hr />
+    <h2>Pressure and Hydraulic Head</h2>
+    <div class="katex-display">
+    p_A = \rho g d_A
+    </div>
+
+    <ul>
+    <li><span class="katex-math">p_A</span> = hydrostatic pressure at point <span class="katex-math">A</span> <span class="katex-math">[{\text{F} \over \text{L}^2}]</span></li>
+    <li><span class="katex-math">\rho</span> = density of medium (<span class="katex-math">\rho_w = 1000~\text{kg}/\text{m}^3</span>)
+        <span class="katex-math">[{\text{M} \over \text{L}^3}]</span></li>
+    <li><span class="katex-math">g</span> = acceleration due to gravity (<span class="katex-math">g = 9.81~\text{m}/\text{s}^2</span>)
+        <span class="katex-math">[{\text{L} \over \text{T}^2}]</span></li>
+    <li><span class="katex-math">d_A</span> = depth at point <span class="katex-math">A</span> <span class="katex-math">[\text{L}]</span></li>
+    </ul>
+    <div class="katex-display">
+    h_A = {p_A \over \rho g} + z_A
+    </div>
+
+    <ul>
+    <li><span class="katex-math">h_A</span> = hydraulic head at point <span class="katex-math">A</span> <span class="katex-math">[\text{L}]</span></li>
+    <li><span class="katex-math">z_A</span> = elevation (relative to some datum = 0) at point <span class="katex-math">A</span> <span class="katex-math">[\text{L}]</span></li>
+    </ul>
+    <p>For hydrostatic body with free surface, <span class="katex-math">h_A = d_A + z_A</span>.</p>
+    <div class="katex-display">
+    h_p = {p \over \rho g}, h_z = z
+    </div>
+
+    <ul>
+    <li><span class="katex-math">h_p</span> = pressure head <span class="katex-math">[\text{L}]</span></li>
+    <li><span class="katex-math">h_z</span> = elevation head <span class="katex-math">[\text{L}]</span></li>
+    </ul>
+    <hr />
+    <h2>Specific Yield</h2>
+    <div class="katex-display">
+    S_y = {V_\delta \over V_s}
+    </div>
+
+    <ul>
+    <li><span class="katex-math">S_y</span> = specific yield</li>
+    <li><span class="katex-math">V_\delta</span> = vol. water drained by gravity</li>
+    <li><span class="katex-math">V_s</span> = vol. sediment</li>
+    </ul>
+    <hr />
+    <h2>Darcy&rsquo;s Law</h2>
+    <div class="katex-display">
+    Q = K A {\Delta h \over L}
+    </div>
+
+    <ul>
+    <li><span class="katex-math">Q</span> = flux through a sediment <span class="katex-math">[{\text{L}^3 \over \text{T}}]</span></li>
+    <li><span class="katex-math">K</span> = hydraulic conductivity of the sediment <span class="katex-math">[{\text{L} \over \text{T}}]</span></li>
+    <li><span class="katex-math">\Delta h</span> = difference in head <span class="katex-math">[\text{L}]</span></li>
+    <li><span class="katex-math">L</span> = length of sediment <span class="katex-math">[\text{L}]</span></li>
+    </ul>
+    <div class="katex-display">
+    K = {\rho g k \over \mu}
+    </div>
+
+    <ul>
+    <li><span class="katex-math">k</span> = hydraulic permeability <span class="katex-math">[\text{L}^2]</span></li>
+    <li><span class="katex-math">\mu</span> = viscosity <span class="katex-math">[{\text{M} \over \text{L} \text{T}}]</span></li>
+    </ul>
+    <hr />
+    <h2>Defs (Aquifers, Confining, Wells)</h2>
+    <dl>
+    <dt>Aquifer</dt>
+    <dd>
+    <p>A relatively permeable rock/sediment layer that is useful for water supply
+    (e.g. sand, limestone).</p>
+    </dd>
+    <dt>Confining unit</dt>
+    <dd>
+    <p>A relatively low-permeability rock or sediment layer (e.g. shale, mud).</p>
+    </dd>
+    <dt>Unconfined aquifer</dt>
+    <dd>
+    <p>Connected to the water table.</p>
+    </dd>
+    <dt>Confined aquifer</dt>
+    <dd>
+    <p>Separated from the water table by at least one confining unit.</p>
+    </dd>
+    <dt>Potentiometric surface</dt>
+    <dd>
+    <p>Where the water table would be if unconfined.</p>
+    </dd>
+    <dt>Water table well</dt>
+    <dd>
+    <p>A well where the potentiometric surface is at the top of the aquifer.</p>
+    </dd>
+    <dt>Artesian well</dt>
+    <dd>
+    <p>A well where the potentiometric surface is above the top of the aquifer
+    (due to it being confined).</p>
+    </dd>
+    <dt>Flowing well</dt>
+    <dd>
+    <p>A type of Artesian well where the potentiometric surface is above the
+    ground surface.</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Darcy Revisited</h2>
+    <div class="katex-display">
+    q = {Q \over A} = K {\Delta h \over L}
+    </div>
+
+    <div class="katex-display">
+    \mathbf{q} = \mathbf{K} \nabla h
+    </div>
+
+    <div class="katex-display">
+    q = K {dh \over dl}
+    </div>
+
+    <hr />
+    <h2>Anisotropy</h2>
+    <dl>
+    <dt>Isotropic media</dt>
+    <dd>
+    <p>Groundwater flows perpendicular to hydraulic head contours.</p>
+    </dd>
+    <dt>Anisotropic media</dt>
+    <dd>
+    <p>Groundwater flow <em>may</em> not be perp. to head contours.</p>
+    </dd>
+    </dl>
+    <h3>Causes</h3>
+    <ul>
+    <li>Bedding</li>
+    <li>Grain orientation</li>
+    <li>Fractures</li>
+    <li>Layered systems</li>
+    </ul>
+    <hr />
+    <h2>Representative Elementary Volume</h2>
+    <dl>
+    <dt>REV</dt>
+    <dd>
+    <p>The scale above which porosity begins to make sense/apply. (Porosity is a
+    <strong>macroscopic</strong> property.) Usually 3-5cm (?).</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Specific Storage</h2>
+    <div class="katex-display">
+    S_s = \rho g (\alpha + \phi \beta)
+    </div>
+
+    <ul>
+    <li><span class="katex-math">S_s</span> = specific storage</li>
+    <li><span class="katex-math">\alpha</span> = compressibility of the aquifer</li>
+    <li><span class="katex-math">\beta</span> = compressibility of water</li>
+    </ul>
+    <hr />
+    <h2>Fracking</h2>
+    <h3>Pros</h3>
+    <ul>
+    <li>Encouraging switch from coal to natural gas<ul>
+    <li>Reduced CO<span class="katex-math">_2</span> emissions</li>
+    </ul>
+    </li>
+    <li>Domestic energy supply</li>
+    <li>Jobs</li>
+    </ul>
+    <h3>Cons</h3>
+    <ul>
+    <li>Balancing water resources</li>
+    <li>Methane leaks<ul>
+    <li>Flammable water</li>
+    <li>Greenhouse gas (negates other advantages?)</li>
+    </ul>
+    </li>
+    <li>Induced seismicity</li>
+    </ul>
+    <hr />
+    <h2>Solute Transport</h2>
+    <dl>
+    <dt>Advection</dt>
+    <dd>
+    <p>Groundwater carrying solutes along with it. If just advection, called &ldquo;plug
+    flow.&rdquo;</p>
+    </dd>
+    <dt>Diffusion</dt>
+    <dd>
+    <p>Fick&rsquo;s Law: <span class="katex-math">q_c = -D_\text{molec} {dc \over dx}</span></p>
+    <ul>
+    <li><span class="katex-math">D_\text{molec}</span> = coefficient of molecular diffusion</li>
+    <li><span class="katex-math">{dc \over dx}</span> = concentration gradient</li>
+    </ul>
+    </dd>
+    <dt>Dispersion</dt>
+    <dd>
+    <p>Mechanical mixing</p>
+    <p><span class="katex-math">q_c = -D_\text{mech} {dc \over dx}</span></p>
+    <ul>
+    <li><span class="katex-math">D_\text{mech}</span> = coefficient of mechanical dispersion</li>
+    </ul>
+    <p><span class="katex-math">D_\text{mech} = \alpha_L |v|</span></p>
+    <ul>
+    <li><span class="katex-math">v</span> = avg. lin. vel. of the fluid</li>
+    <li><span class="katex-math">\alpha_L</span> = longitudinal dispersivity of the medium</li>
+    <li><span class="katex-math">\alpha_T</span> = transverse dispersivity</li>
+    </ul>
+    <p>Longitudinal: parallel to the direction of flow.</p>
+    <p>Transverse: perpendicular to the direction of flow.</p>
+    <p>Rule of thumb: <span class="katex-math">\alpha_L \approx 10 \times \alpha_T</span></p>
+    <p><em>Causes of dispersion:</em></p>
+    <ul>
+    <li>Differences in width of pores</li>
+    <li>Friction within pores</li>
+    <li>Path length</li>
+    </ul>
+    </dd>
+    </dl>
+    <hr />
+    <hr />
+    <h2>Appendix A: Symbols</h2>
+    <dl>
+    <dt><span class="katex-math">\rho</span></dt>
+    <dd>= density</dd>
+    <dt><span class="katex-math">\mu</span></dt>
+    <dd>= viscosity</dd>
+    <dt><span class="katex-math">Q</span></dt>
+    <dd>= volumetric flux (<span class="katex-math">{V \over t}</span>)</dd>
+    <dt><span class="katex-math">A</span></dt>
+    <dd>= area</dd>
+    <dt><span class="katex-math">\phi</span></dt>
+    <dd>= porosity (<span class="katex-math">{V_\text{pores} \over V_\text{bulk}}</span>)</dd>
+    <dt><span class="katex-math">S</span></dt>
+    <dd>= saturation (<span class="katex-math">{V_\text{water} \over V_\text{pores}}</span>)</dd>
+    <dt><span class="katex-math">\theta</span></dt>
+    <dd>= moisture content (<span class="katex-math">{V_\text{water} \over V_\text{bulk}}</span>)</dd>
+    <dt><span class="katex-math">S_y</span></dt>
+    <dd>= specific yield (<span class="katex-math">{V_\text{water that drains by gravity} \over V_\text{bulk}}</span>)</dd>
+    <dt><span class="katex-math">q</span></dt>
+    <dd>= flux per unit area (aka specific discharge) (<span class="katex-math">\mathbf{q} = \mathbf{K} \nabla h</span>)</dd>
+    <dt><span class="katex-math">\mathbf{v}</span></dt>
+    <dd>= avg. linear velocity (<span class="katex-math">{q \over \phi}</span>)</dd>
+    <dt><span class="katex-math">K</span></dt>
+    <dd>= hydraulic conductivity (<span class="katex-math">{\rho g k \over \mu}</span>)</dd>
+    <dt><span class="katex-math">k</span></dt>
+    <dd>= permeability</dd>
+    <dt><span class="katex-math">p</span></dt>
+    <dd>= pressure</dd>
+    <dt><span class="katex-math">h</span></dt>
+    <dd>= hydraulic head (<span class="katex-math">{p \over \rho g} + z</span>)</dd>
+    <dt><span class="katex-math">z</span></dt>
+    <dd>= elevation relative to <em>datum</em></dd>
+    <dt><span class="katex-math">\nabla h</span></dt>
+    <dd>= hydraulic gradient (<span class="katex-math">[{dh \over dx}, {dh \over dy}, {dh \over dz}]</span>)</dd>
+    <dt><span class="katex-math">t_r</span></dt>
+    <dd>= residence time (<span class="katex-math">{V_\text{res} \over Q}</span>)</dd>
+    </dl>
+  </div></div></body>
+</html>

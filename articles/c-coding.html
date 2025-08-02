@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Coding - Articles | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/codehilite.css" rel="stylesheet" type="text/css" media="all">
+    <style>
+      p {
+        margin-bottom: 1em;
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container-small">
+    <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      C Coding Style Guide
+    </h1>
+
+    <h2>Naming</h2>
+    <p>
+      Variable names and static helper functions should use camelCase.
+    </p>
+    <p>
+      Types, enums and constants should use TitleCase.
+    </p>
+    <p>
+      Externally-accessible functions should have a TitleCase name with their namespace (e.g.
+      <code>tito</code>) as an all-lowercase prefix.
+    </p>
+    <p>
+      Macros should use ALL&#95;CAPS with underscores, but macros should be generally avoided.
+    </p>
+    <p>
+      Names should be descriptive, with the extent of their specificity relative to the size of
+      their scope. Function-local variables need not specify their entire scope in their names,
+      whereas externally accessible functions should be clear when used in many different contexts.
+      With the exception of loop variables (e.g. <code>i</code>), tiny-scope variables with an
+      obvious use (e.g. <code>tmp</code> in a swap), and namespace prefixes ubiquitous in the
+      codebase (e.g. <code>tito</code>), names should be composed of english words, or in the case
+      of very long names, common and unambiguous abbreviations. We should all be able to pronounce
+      your names.
+    </p>
+
+    <h2>Macros</h2>
+    <p>
+      Macros should be generally avoided in favor of enums for integer constants, <code>const</code>
+      variables for other constants, and small functions that are likely to be inlined for
+      function-like macros.
+    </p>
+    <p>
+      Use enums for nontrivial (e.g. 0, 1, -1) integer constants instead of <code>const</code>
+      variables, macros, or literals.
+    </p>
+    <p>
+      Avoid using <code>#ifdef</code> in functions, preferring instead to factor out the conditional
+      code into a small function, putting the <code>#ifdef</code> around that whole function body
+      and providing a no-op stub in the <code>#else</code>.
+    </p>
+    <p>
+      Always provide a comment at the <code>#endif</code> with a repetition of the condition.
+    </p>
+
+    <div class="codehilite">
+<pre><span></span><code><span class="cp">#ifdef CONFIG_SOMETHING</span>
+<span class="c1">// ...</span>
+<span class="cp">#endif </span><span class="c1">// CONFIG_SOMETHING</span></code></pre>
+    </div>
+
+    <h2>Blocks and Whitespace</h2>
+    <p>
+      Braces should follow the One True Brace Style: all control structures (with the exception of
+      individual <code>case</code>s) should use braces, and opening braces should be on the same
+      line as their structure heading, with a space between the heading and the brace. The exception
+      to this is function definitions, which should have the opening brace on its own line, indented
+      at the same level as the function heading. Closing braces should be on their own line, except
+      when followed by <code>while</code> in a do loop or <code>else</code> or <code>else if</code>
+      in an if structure.
+    </p>
+    <p>
+      Blocks should be indented 2 spaces (including the cases in a <code>switch</code>), and line
+      continuations should be indented 4 spaces. Try not to have your lines exceed 80 characters.
+      However, do not break strings, especially user-visible strings, as this makes them more
+      difficult to search the code for.
+    </p>
+    <p>
+      Every statement should be followed by a newline. Having multiple statements on a single line
+      doesn&rsquo;t save that much space, and is easy to misread as a single statement. Similarly,
+      declare each variable in a separate declaration, as the binding of various type modifiers in C
+      makes multi-variable declarations easy to misread.
+    </p>
+    <p>
+      All assignment operators, binary arithmetic, bitwise, and logical operators,
+      all comparison operators, and the ternary conditional operator should have
+      spaces on both sides. Use parentheses to be explicit about operation order. We
+      shouldn&rsquo;t have to look up the precedence chart to read your code. Commas should
+      have space after them and no space before them. Other operators should not have
+      whitespace between them and their operands. When breaking a line at an operator
+      other than the comma, the operator should start the second line.
+    </p>
+    <p>
+      Put a space after <code>if</code>, <code>switch</code>, <code>case</code>, <code>for</code>,
+      <code>do</code>, and <code>while</code>.
+    </p>
+    <p>
+      Do not leave whitespace at the end of lines.
+    </p>
+
+    <h2>Commenting</h2>
+    <p>
+      Try to write code that does not require inline commenting, but if you need to do something
+      non-obvious, provide a brief comment. Inline comments should be immediately before the code
+      they describe, indented at the same level.
+    </p>
+    <p>
+      Provide a brief Doxygen comment for each function describing its purpose. Markdown formatting
+      style is preferred. Usage examples here and in file-level comments are encouraged. If you have
+      a file-level comment, do not list the file name, author, or other metadata. This metadata is
+      already accessible through git.
+    </p>
+    <p>
+      Commenting out large blocks of code is discouraged, but if you really need to, use <code>#if
+      0</code> &hellip; <code>#endif</code> rather than <code>/*</code> &hellip; <code>*/</code>. It
+      actually nests properly. But you can really do whatever you want, because you shouldn&rsquo;t
+      check in blocks of commented-out code.
+    </p>
+    <p>
+      Do not include editor modelines (e.g. <code>-*- mode: c -*-</code>,
+      <code>vim: set filetype=c :</code>) in files.
+    </p>
+    <p>
+      The search token for todo comments is <code>TODO:</code>.
+    </p>
+
+    <h2>Declarations</h2>
+    <p>
+      Do not use <code>auto</code>, <code>inline</code>, or <code>register</code>. Everywhere it is
+      reasonable to have an auto-storage-class variable, the <code>auto</code> is implicit.
+      <code>inline</code> and <code>register</code>, on the other hand, do nothing in modern
+      compilers. Do use <code>noreturn</code> if your function unconditionally exits.
+    </p>
+    <p>
+      Function declarations should include the names of parameters, and should always
+      include the return type.
+    </p>
+    <p>
+      Generally
+      <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=refs/heads/master#n318">
+      avoid declaring typedefs</a>, especially to hide pointers. The exceptions to this are when
+      you really do need an opaque object (which should be rarely), and when using function
+      pointers. Function pointer syntax is weird, and using a typedef for them generally makes the
+      code clearer.
+    </p>
+    <p>
+      Only declare global variables when you really need to.
+    </p>
+
+    <h2>Statements</h2>
+    <p>
+      Avoid <code>goto</code> and <code>longjmp</code>.
+    </p>
+    <p>
+      All <code>switch</code> statements should have a <code>default</code> label, even if it is
+      just a false assertion. All <code>case</code>s in a <code>switch</code> that have any code
+      exclusive to them should end with <code>break</code>. This means don&rsquo;t get cute with
+      fallthrough.
+    </p>
+    <p>
+      Use assertions liberally.
+    </p>
+
+    <h2>Functions</h2>
+    <p>
+      From the Linux kernel
+      <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst?id=refs/heads/master">
+      coding-style.rst</a>:
+    </p>
+    <blockquote>
+      <p>
+        Functions should be short and sweet, and do just one thing.  They should fit on one or two
+        screenfuls of text (the ISO/ANSI screen size is 80x24, as we all know), and do one thing and
+        do that well.
+      </p>
+      <p>
+        The maximum length of a function is inversely proportional to the complexity and indentation
+        level of that function.  So, if you have a conceptually simple function that is just one
+        long (but simple) case-statement, where you have to do lots of small things for a lot of
+        different cases, it&rsquo;s OK to have a longer function.
+      </p>
+      <p>
+        However, if you have a complex function, and you suspect that a
+        less-than-gifted first-year high-school student might not even understand
+        what the function is all about, you should adhere to the maximum limits all
+        the more closely.  Use helper functions with descriptive names....
+      </p>
+      <p>
+        Another measure of the function is the number of local variables.  They shouldn&rsquo;t
+        exceed 5-10, or you&rsquo;re doing something wrong.  Re-think the function, and split it
+        into smaller pieces.  A human brain can generally easily keep track of about 7 different
+        things, anything more and it gets confused.  You know you&rsquo;re brilliant, but maybe
+        you&rsquo;d like to understand what you did 2 weeks from now.
+      </p>
+    </blockquote>
+    <p>
+      If the success or failure of a function is relevant to the caller, the function should return
+      a boolean success value, unless it would otherwise return some other value in which case it
+      should return some invalid value (e.g. NULL, -1).
+    </p>
+    <p>
+      Use early <code>return</code>, <code>continue</code>, and <code>break</code>. That is, do
+    </p>
+    <div class="codehilite">
+<pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">doSomething</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">conditionTrue</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loadResource</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">doSomethingElse</span><span class="p">(</span><span class="n">resource</span><span class="p">);</span>
+<span class="p">}</span></code></pre>
+    </div>
+    <p>
+      rather than
+    </p>
+    <div class="codehilite">
+<pre><span></span><code><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">doSomething</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">conditionTrue</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loadResource</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">doSomethingElse</span><span class="p">(</span><span class="n">resource</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span></code></pre>
+    </div>
+
+    <h2>Additional Reading</h2>
+    <p>
+      The Linux kernel&rsquo;s
+      <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/4.Coding.rst?id=refs/heads/master">
+      4.Coding.rst</a> is probably a good read, even though some of it is specific to kernel
+      development.
+    </p>
+    
+    <hr>
+    
+    <div class="text-center">
+      <p>&copy; Emberlynn McKinney</p>
+      <img src="/neocities.png">
+    </div>
+  </div></div></body>
+</html>

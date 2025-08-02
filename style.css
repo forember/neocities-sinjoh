@@ -1,0 +1,160 @@
+/* CSS is how you can add style to your website, such as colors, fonts, and positioning of your
+   HTML content. To learn how to do something, just try searching Google for questions like
+   "how to change link color." */
+
+@media (min-width: 768px) {
+  .container, .container-small {
+    width: 768px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 992px;
+  }
+}
+
+.container, .container-small {
+  display: inline-block;
+  text-align: left;
+}
+
+.box-shadow {
+  box-shadow: 4px 4px 4px 0px #546;
+  margin-right: 8px;
+}
+
+.card {
+  border: 1px solid #042;
+  flex: 280px;
+  padding: 4px 8px;
+}
+.card.card-small {
+  flex: 140px;
+}
+.card.with-full-height {
+  padding-bottom: 16px;
+}
+.card a, .card a:link, .card a:hover {
+  text-decoration: none;
+  display: block;
+}
+.card h4, .card h5, .card h6 {
+  margin: 4px 8px 8px;
+}
+.card p {
+  color: #d8d8d8;
+  margin-bottom: 0px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.d-none {
+  display: none;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.rounded {
+  border-radius: 8px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-shadow {
+  text-shadow: 2px 2px 2px #546;
+}
+
+a, a:link {
+  background-color: transparent;
+  color: #66c;
+  text-decoration: underline;
+}
+a:hover {
+  background-color: #668;
+  color: #ffd;
+}
+a.no-decoration, a.no-decoration:link, a.no-decoration:hover {
+  background-color: transparent;
+  color: #d8d8d8;
+  text-decoration: none;
+}
+
+abbr {
+  text-decoration: underline dotted white;
+}
+
+blockquote {
+  background-color: #010;
+  border: 1px solid white;
+  padding: 0 1ex 0 1ex;
+  margin: 16px 8px 16px 16px;
+}
+
+body {
+  background-color: #111;
+  color: #d8d8d8;
+  font-family: 'Slabo 13px', serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4em;
+}
+
+code, pre {
+  font-family: "Courier New", Courier, monospace;
+}
+code {
+  font-size: 13pt;
+}
+pre code {
+  font-size: 10pt;
+}
+pre {
+  background-color: #001;
+  border: 1px solid white;
+  color: #d8d8d8;
+  font-size: 10pt;
+  line-height: 14.8pt;
+  padding: 1ex;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Slabo 27px', serif;
+}
+h4, h5, h6 {
+  line-height: 1.2em;
+}
+h1, h2, h3 {
+  line-height: 1em;
+}
+
+hr {
+  color: #d8d8d8;
+}
+
+input, textarea {
+  background-color: #112;
+  color: #ffd;
+}
+input:invalid, textarea:invalid {
+  background-color: #211;
+}
+
+table {
+  border-collapse: collapse;
+}
+table td, table th {
+  border: 1px solid black;
+  padding: 2px;
+}

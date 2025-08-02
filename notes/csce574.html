@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSCE574 Robotics - USC Notes | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.css"
+        integrity="sha384-pRsDYiLLocCzWnUN/YEr9TBTTaZOUi5x8adKfqi6Qt44lDaFkoP++x1j2ohSMtdf"
+        crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.js"
+        integrity="sha384-tMzugJpfLv7v0f+KXzNMqNCC6sVzLMM3sCnZDgzy0lcO/0h3sAkEBg/URFcV0JpE"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.addEventListener("load", function(event) {
+            $(".katex-math").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex);
+                $(this).html(html);
+            });
+            $(".katex-display").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex, {displayMode: true});
+                $(this).html(html);
+            });
+        });
+    </script>
+    <style>
+      img {
+        max-width: 100%;
+      }
+      div {
+        overflow-x: scroll;
+      }
+      div.container, div.container-small, div.katex-display, div.text-center {
+        overflow-x: auto;
+      }
+      @media (max-width: 576px) {
+        .katex-display {
+          font-size: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container-small">
+    <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      CSCE 574 Robotics Notes
+    </h1>
+
+    <h2>Hydraulic Drive</h2>
+    <ul>
+    <li>Higher torque</li>
+    <li>Useful for e.g. earth digging</li>
+    </ul>
+    <h2>Shape Memory Alloy</h2>
+    <ul>
+    <li>Fine control</li>
+    <li>Don&rsquo;t require speed controllers</li>
+    <li>Useful for e.g. prehensile hands (light touch)</li>
+    </ul>
+    <h2>Pneumatic Drive</h2>
+    <ul>
+    <li>Fast</li>
+    <li>Useful for e.g. sorting (manufacturing - high throughput)</li>
+    </ul>
+    <h2>Electric Drive</h2>
+    <ul>
+    <li>Doesn&rsquo;t require external power conversion (e.g. Compressor)</li>
+    <li>Easy to control</li>
+    <li>Rotational by default</li>
+    <li>Useful for e.g. wheeled systems</li>
+    </ul>
+    <hr />
+    <blockquote>
+    <p>For a differential drive robot, where the wheels are distance
+    <span class="katex-math">d</span> apart and the wheel velocities are
+    <span class="katex-math">V_l</span> <span class="katex-math">V_r</span>.
+    Estimate the linear velocity <span class="katex-math">V</span> and
+    the angular velocity <span class="katex-math">\omega</span>.</p>
+    </blockquote>
+    <div class="katex-display">
+    \|V\| = {V_r + V_l \over 2}
+    </div>
+
+    <div class="katex-display">
+    V_x = \|V\| \cos \theta
+    </div>
+
+    <div class="katex-display">
+    V_y = \|V\| \sin \theta
+    </div>
+
+    <div class="katex-display">
+    \omega = {V_r - V_l \over d}
+    </div>
+
+    <hr />
+    <h2>Topological</h2>
+    <ul>
+    <li>Graph of nodes (points)</li>
+    <li>Low complexity</li>
+    <li>Exploration is graph exploration</li>
+    <li>Useful for finding the safest path (GVG)</li>
+    <li>Useful for simple environments</li>
+    <li>Useful for indoor environments (hallways, rooms, nice corners)</li>
+    </ul>
+    <h2>Grid-Based</h2>
+    <ul>
+    <li>Discretized map (grid)</li>
+    <li>Exploration is Frontier-based</li>
+    <li>Easy to implement</li>
+    <li>More difficult to navigate</li>
+    <li>Useful for reducing complex obstacles</li>
+    <li>Can localize to a specific cell (often more accurate than to topol. node)</li>
+    <li>Useful when you know your location (e.g. GPS)</li>
+    </ul>
+    <h2>Feature-Based</h2>
+    <ul>
+    <li>Locations of features</li>
+    <li>Easiest to localize in</li>
+    <li>No inherent exploration method</li>
+    <li>Obstacles difficult to define</li>
+    <li>Useful where localization is imperative</li>
+    <li>Useful where you don&rsquo;t have something like GPS but also have a complex
+        environment and need to localize easily (e.g. a coral reef)</li>
+    </ul>
+    <hr />
+    <h2>Exteroceptive</h2>
+    <ul>
+    <li>Measures the environment</li>
+    <li>Camera</li>
+    <li>Laser scanner</li>
+    </ul>
+    <h2>Proprioceptive</h2>
+    <ul>
+    <li>Measures the robot</li>
+    <li>Wheel encoder</li>
+    <li>IMU</li>
+    </ul>
+    <hr />
+    <h2>Laser scanner</h2>
+    <ul>
+    <li>Accurate</li>
+    <li>Low computational cost</li>
+    <li>High energy cost</li>
+    <li>Does not work on transparent (or sometimes black) obstacles</li>
+    </ul>
+    <h2>Sonar</h2>
+    <ul>
+    <li>Low accuracy</li>
+    <li>Low computational cost</li>
+    <li>Middling energy cost</li>
+    </ul>
+    <h2>Stereo Camera</h2>
+    <ul>
+    <li>Middling accuracy (depends on setup)</li>
+    <li>High computational cost</li>
+    <li>Low Energy Cost</li>
+    </ul>
+    <hr />
+    <h2>Frontier Based Exploration Algorithm</h2>
+    <ol>
+    <li>Go to nearest unexplored cell (that is not an obstacle).</li>
+    <li>Repeat.</li>
+    <li>Profit!</li>
+    </ol>
+    <hr />
+    <p>Higher exploitation (localization) means higher map accuracy, but lower
+    efficiency, whereas higher exploration means higher mapping efficiency, but
+    lower accuracy.</p>
+    <hr />
+    <h2>Generalized Voronoi Graph Exploration Algorithm</h2>
+    <ol>
+    <li>Access GVG</li>
+    <li>Follow edge</li>
+    <li>Reach node</li>
+    <li>Select edge to closest frontier</li>
+    <li>Repeat</li>
+    </ol>
+    <hr />
+    <h2>Outdoor Path Planning Cost Parameters</h2>
+    <ol>
+    <li>Ease of terrain (ruggedness)</li>
+    <li>Distance</li>
+    <li>Safety</li>
+    </ol>
+    <hr />
+    <h2>Outdoor Path Planning Cost Parameters</h2>
+    <ol>
+    <li>Distance (efficiency)</li>
+    <li>Closeness to walls (for localization)</li>
+    <li>Human traffic</li>
+    </ol>
+    <hr />
+    <h2>Sonar Sensor Innaccuracy</h2>
+    <ul>
+    <li>Specular reflections (erroneous reflection)</li>
+    <li>Crosstalk (multiple sensors interfering)</li>
+    <li>Speed of sound difference in different materials</li>
+    </ul>
+    <hr />
+    <h2>Problems with Euler Angles</h2>
+    <ul>
+    <li>Gimbal lock</li>
+    <li><span class="katex-math">0,2\pi</span> rad discontinuity</li>
+    </ul>
+    <hr />
+    <dl>
+    <dt>Global Localization</dt>
+    <dd>
+    <p>Unknown initial position</p>
+    </dd>
+    <dt>Tracking</dt>
+    <dd>
+    <p>Known initial position</p>
+    </dd>
+    <dt>Kidnapped Robot Problem (i.e. Re-Localization)</dt>
+    <dd>
+    <p>Incorrect known position</p>
+    </dd>
+    </dl>
+    <hr />
+    <blockquote>
+    <p>For a Bayesian Filter:<br />
+    <span class="katex-math">Bel(x_t) = p(x_t | o_t,a_{t-1},o_{t-1},a_{t-2},&hellip;,o_0)</span><br />
+    where <span class="katex-math">o_i</span> are observations at time i and
+    <span class="katex-math">a_i</span> are actions at time i.
+    Simplify the equation using the Markov property, the theorem of total
+    probability and Bayes rule to get to:</p>
+    <p><div class="katex-display">
+    Bel(x_t) = \eta p(o_t | x_t) \int p(x_t | x_{t-1},a_{t-1})Bel(x_{t-1})dx_{t-1}
+    </div></p>
+    <p>where:</p>
+    <p>Bayes Rule : <span class="katex-math">p(a|b) = \frac{p(b|a)p(a)}{p(b)}</span></p>
+    <p>you can assume : <span class="katex-math">\eta = 1 / p(o_i | a_{t-1},&hellip;,o_0)</span></p>
+    </blockquote>
+    <p>Estimation:</p>
+    <div class="katex-display">
+    Bel(x_t) = p(x_t | Z_T)
+    </div>
+
+    <p>Expand <span class="katex-math">Z_T</span>:</p>
+    <div class="katex-display">
+    Bel(x_t) = p(x_t | o_t,a_{t-1},o_{t-1},...,o_0)
+    </div>
+
+    <p>Definition of history:</p>
+    <div class="katex-display">
+    h_t := a_{t-1},o_{t-1},a_{t-2},...,o_0
+    </div>
+
+    <div class="katex-display">
+    Bel(x_t) = p(x_t | o_t,h_t)
+    </div>
+
+    <p>Apply Bayes&rsquo; Rule (<span class="katex-math">p(a|b) = {p(b|a)p(a) \over p(b)}</span>):</p>
+    <div class="katex-display">
+    Bel(x_t) = {p(o_t | x_t,h_t) p(x_t | h_t) \over p(o_t | h_t)}
+    </div>
+
+    <p>Substitute in <span class="katex-math">\eta = 1 / p(o_t | h_t)</span>:</p>
+    <div class="katex-display">
+    Bel(x_t) = \eta p(o_t | x_t,h_t) p(x_t | h_t)
+    </div>
+
+    <p>Apply Markov assumption (the probability of our current observation is only
+    dependent on our current state &mdash; If you are somewhere, you will see the
+    same thing no matter how you got there, whereas the state itself is dependent
+    on history):</p>
+    <div class="katex-display">
+    Bel(x_t) = \eta p(o_t | x_t) p(x_t | h_t)
+    </div>
+
+    <p>Apply the law of total probability:</p>
+    <div class="katex-display">
+    Bel(x_t) = \eta p(o_t | x_t) \int p(x_t|x_{t-1},h_t)p(x_{t-1}|h_t) dx_{t-1}
+    </div>
+
+    <p>Another Markov assumption (the probability of our current state is dependent
+    only on our previous state and our previous history):</p>
+    <div class="katex-display">
+    Bel(x_t) = \eta p(o_t|x_t)\int p(x_t|x_{t-1},a_{t-1})p(x_{t-1}|h_t)dx_{t-1}
+    </div>
+
+    <p>Substitute in definition for <span class="katex-math">Bel(x_{t-1})</span>:</p>
+    <div class="katex-display">
+    Bel(x_t) = \eta p(o_t|x_t) \int p(x_t|x_{t-1},a_{t-1})Bel(x_{t-1}) dx_{t-1}
+    </div>
+
+    <hr />
+    <blockquote>
+    <p>For a mobile robot whose estimated motion is described by:</p>
+    <p><span class="katex-math">\hat{x}_{t+1} = \hat{x}_t + (V_t + w_{V_t})\delta t\cos \hat{\phi}_t</span><br />
+    <span class="katex-math">\hat{y}_{t+1} = \hat{y}_t + (V_t + w_{V_t})\delta t\sin \hat{\phi}_t</span><br />
+    <span class="katex-math">\hat{\phi}_{t+1} = \hat{\phi}_t + (\omega_t + w_{\omega_t})\delta t</span>  </p>
+    <p>and its real motion is defined as:</p>
+    <p><span class="katex-math">x_{t+1} = x_t + V_t \delta t\cos \hat{\phi}_t</span><br />
+    <span class="katex-math">y_{t+1} = y_t + V_t \delta t\sin \hat{\phi}_t</span><br />
+    <span class="katex-math">\phi_{t+1} = \phi_t + \omega_t \delta t</span>  </p>
+    <p>Derive the error: <span class="katex-math">\tilde{x}_{t+1} = x_{t+1} - \hat{x}_{t+1}</span><br />
+    using small angle approximation.</p>
+    </blockquote>
+    <p><span class="katex-math">\tilde{x}_{t+1} = x_{t+1} - \hat{x}_{t+1}</span><br />
+    <span class="katex-math">=x_t+V_t\delta t\cos\phi_t-(\hat{x}_t+(V_t+w_{V_t})\delta t\cos\hat{\phi}_t)</span><br />
+    <span class="katex-math">=\tilde{x}_t+V_t\delta t(\cos\phi_t-\cos\hat{\phi}_t)-w_{V_t}\delta t\cos\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{x}_t+V_t\delta t(\cos(\hat{\phi}_t+\tilde{\phi}_t)-\cos\hat{\phi}_t)-w_{V_t}\delta t\cos\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{x}_t+V_t\delta t([\cos\hat{\phi}_t\cos\tilde{\phi}_t-\sin\hat{\phi}_t\sin\tilde{\phi}_t]-\cos\hat{\phi}_t)-w_{V_t}\delta t\cos\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{x}_t+V_t\delta t([\cos\hat{\phi}_t-\tilde{\phi}_t\sin\hat{\phi}_t]-\cos\hat{\phi}_t)-w_{V_t}\delta t\cos\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{x}_t-V_t\delta t\tilde{\phi}_t\sin\hat{\phi}_t-w_{V_t}\delta t\cos\hat{\phi}_t</span>  </p>
+    <p><span class="katex-math">\tilde{y}_{t+1} = y_{t+1} - \hat{y}_{t+1}</span><br />
+    <span class="katex-math">=y_t+V_t\delta t\sin\phi_t-(\hat{y}_t+(V_t+w_{V_t})\delta t\sin\hat{\phi}_t)</span><br />
+    <span class="katex-math">=\tilde{y}_t+V_t\delta t(\sin\phi_t-\sin\hat{\phi}_t)-w_{V_t}\delta t\sin\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{y}_t+V_t\delta t(\sin(\hat{\phi}_t+\tilde{\phi}_t)-\sin\hat{\phi}_t)-w_{V_t}\delta t\sin\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{y}_t+V_t\delta t([\sin\hat{\phi}_t\cos\tilde{\phi}_t+\cos\hat{\phi}_t\sin\tilde{\phi}_t]-\sin\hat{\phi}_t)-w_{V_t}\delta t\sin\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{y}_t+V_t\delta t([\sin\hat{\phi}_t+\tilde{\phi}_t\cos\hat{\phi}_t]-\sin\hat{\phi}_t)-w_{V_t}\delta t\sin\hat{\phi}_t</span><br />
+    <span class="katex-math">=\tilde{y}_t+V_t\delta t\tilde{\phi}_t\cos\hat{\phi}_t-w_{V_t}\delta t\sin\hat{\phi}_t</span>  </p>
+    <p><span class="katex-math">\tilde{\phi}_{t+1} = \phi_{t+1} - \hat{\phi}_{t+1}</span><br />
+    <span class="katex-math">=\phi_t+\omega_t\delta t-(\hat{\phi}_t+(\omega_t+w_{\omega_t})\delta t)</span><br />
+    <span class="katex-math">=\tilde{\phi}_t+\omega_t\delta t-\omega_t\delta t-w_{\omega_t}\delta t</span><br />
+    <span class="katex-math">=\tilde{\phi}_t-w_{\omega_t}\delta t</span>  </p>
+    <hr />
+    <p>Resampling is a process necessary for particle filters with finite numbers of
+    particles in which the particles are redistributed according to the current PDF
+    (probability distribution function).</p>
+    <hr />
+    <h2>Particle Filter State Estimation Algorithm</h2>
+    <dl>
+    <dt>Propogation</dt>
+    <dd>
+    <p>Calculate the pre-reading state estimate.</p>
+    </dd>
+    <dt>Update</dt>
+    <dd>
+    <p>Calculate the state estimate taking into consideration the pre-reading
+    estimate and the reading.</p>
+    </dd>
+    <dt>Resampling</dt>
+    <dd>
+    <p>Redistribute the particles according to the new state estimate.</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Simultaneous Localization and Mapping</h2>
+    <p>SLAM is the process of building a map while simultaneously using that map to
+    continually localize.</p>
+    <p>Main challenges for SLAM:</p>
+    <ul>
+    <li>Controlling uncertainty</li>
+    <li>Controlling growth of complexity</li>
+    <li>Achieving autonomous exploration</li>
+    </ul>
+    <hr />
+    <p>A robot <em>configuration</em> is a specification of the positions of all robot points
+    releative to a fixed coordinate system. This <em>configuration</em> can be represented
+    as a <em>vector.</em> Therefore, the <em>configuration space</em> is the vector space of the
+    configuration &mdash; all of the possible configurations of the robot. The
+    topology of this space is often not Cartesian. <em>Free space</em> is the vector space
+    in which the robot is not touching any obstacle. <em>Semi-free space</em> is the
+    vector space in which the robot is touching but not overlapping any obstacle.
+    <em>C-Obstacle space</em> is the vector space in which the robot is overlapping an
+    obstacle. Two paths are <em>homotopic</em> whenm they have the same endpoints and can
+    be continuously deformed into each other.</p>
+    <hr />
+    <dl>
+    <dt>Probabalistic Roadmap (PRM)</dt>
+    <dd>
+    <p>Select random points in the free space, connect them, do a graph search.</p>
+    </dd>
+    <dt>Rapidly-Exploring Random Trees (RRT)</dt>
+    <dd>
+    <p>Select a random point, add a node at some constant distance in the
+    direction of the random point from the nearest node to the point (unless
+    the point is closer than the constant distance, in which case you add the
+    point as a node).</p>
+    </dd>
+    </dl>
+    <hr />
+    <h2>Visibility Graph</h2>
+    <ol>
+    <li>Connect initial and goal locations with visible vertices.</li>
+    <li>Connect each obstacle vertex to visible obstacle verticies.</li>
+    <li>Remove edges that intersect the interior of an obstacle.</li>
+    <li>Plan on the resulting graph.</li>
+    </ol>
+    <p>Guiding principle: stick to corners.</p>
+    <h2>GVG</h2>
+    <ol>
+    <li>Construct GVG.</li>
+    <li>Plan on that graph.</li>
+    </ol>
+    <p>Guiding principle: stick to the center of corridors.</p>
+    <hr />
+    <h2>Bug 2</h2>
+    <p>Line from start to goal is <em>s-line</em>.</p>
+    <ol>
+    <li>Head toward goal on <em>s-line</em></li>
+    <li>If obstacle in the way, follow until encounter <em>s-line</em> closer to goal.</li>
+    <li>Repeat.</li>
+    </ol>
+    <p>Bug2 requirements:</p>
+    <ul>
+    <li>Local sensing (e.g. whiskers)</li>
+    <li>Known direction to goal (e.g. beacon/IMU)</li>
+    </ul>
+    <hr />
+    <p>Wavefront:</p>
+    <ol>
+    <li>Label goal &ldquo;2&rdquo;, obstacles &ldquo;1&rdquo;, all others &ldquo;0&rdquo;.</li>
+    <li>Starting at the &ldquo;2&rdquo;, fill out adjacent &ldquo;0&rdquo;s with &ldquo;3&rdquo;.</li>
+    <li>Fill out &ldquo;0&rdquo;s adjacent to &ldquo;3&rdquo;s with &ldquo;4&rdquo;s.</li>
+    <li>And so on&hellip;</li>
+    </ol>
+    <p>&ldquo;0&rdquo;s are unreachable. To plan path, start at start point, go down a number,
+    repeat until you reach the goal.</p>
+    <hr />
+    <h2>Bug 1</h2>
+    <ol>
+    <li>Head toward goal.</li>
+    <li>If obstacle encountered, circumnavigate. Remember closest point to goal.</li>
+    <li>Cicumnavigate back to closest point.</li>
+    <li>Repeat.</li>
+    </ol>
+    <hr />
+    <h2>Grassfire/Brushfire</h2>
+    <ol>
+    <li>Surround the obstacles (including map edge if impassable) with &ldquo;fire&rdquo;.</li>
+    <li>Expand fire to adjacent cells.</li>
+    <li>Repeat step 2.</li>
+    </ol>
+  </div></div></body>
+</html>

@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lambda Calculus | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <script type="text/js-worker">
+      function trace(obj) {
+        console.log(obj);
+      }
+
+      // SYNTAX //
+
+      function tokenize(data) {
+        const tokenIter = data.matchAll(/[@.()]|[^\s@.()]+/g);
+        let tokens = [];
+        for (const token of tokenIter) {
+          tokens.push(token[0]);
+        }
+        return tokens;
+      }
+
+      class ParExpression {
+        constructor(raw, startIndex) {
+          this.raw = raw;
+          this.startIndex = startIndex;
+          this.length = null;
+        }
+
+        getLength() {
+          if (this.length == null) {
+            if (typeof this.raw == "string") {
+              this.length = 1;
+            } else {
+              let lambdIndex = this.raw.indexOf("@", this.startIndex);
+              if (lambdIndex >= 0) {
+                this.length = lambdIndex + 1 - this.startIndex;
+              } else {
+                this.length = this.raw.length - this.startIndex;
+              }
+            }
+          }
+          return this.length;
+        }
+
+        getElem(index) {
+          if (typeof this.raw == "string") {
+            if (index == 0) {
+              return this;
+            } else {
+              return undefined;
+            }
+          } else {
+            if (index >= 0 && index < this.getLength()) {
+              let rawIndex = index + this.startIndex;
+              let elem = this.raw[rawIndex];
+              if (elem == "@") {
+                return new ParExpression(this.raw, rawIndex);
+              } else {
+                return new ParExpression(elem, 0);
+              }
+            } else {
+              return undefined;
+            }
+          }
+        }
+
+        isLambd() {
+          if (typeof this.raw == "string") {
+            return false;
+          } else {
+            return (this.raw[this.startIndex] == "@");
+          }
+        }
+
+        rawDotIndex() {
+          if (this.isLambd()) {
+            return this.raw.indexOf(".", this.startIndex);
+          } else {
+            return -1;
+          }
+        }
+      }
+
+      function prettyParExpr(parExpr) {
+        let pretty = "";
+        let stack = [parExpr.raw.slice(parExpr.startIndex)];
+        while (stack.length) {
+          const elem = stack.pop();
+          if (typeof elem == "string") {
+            if (pretty.length && !/^[.)]$/.test(elem)
+              && !/^[@.(]$/.test(pretty.at(-1))) {
+              pretty += " ";
+            }
+            pretty += elem;
+          } else {
+            stack.push(")");
+            for (let i = elem.length - 1; i >= 0; i--) {
+              stack.push(elem[i]);
+            }
+            stack.push("(");
+          }
+        }
+        return pretty;
+      }
+
+      function isLessUnsigned(a, b) {
+        // Treat -1 as infinite.
+        if (a == -1) {
+          return false;
+        } else if (b == -1) {
+          return true;
+        } else {
+          return (a < b);
+        }
+      }
+
+      function parseParTree(tokens) {
+        let cursor = 0;
+        let parExpr = [];
+        let treeStack = [parExpr];
+        while (cursor < tokens.length && treeStack.length) {
+          const openIndex = tokens.indexOf("(", cursor);
+          const closeIndex = tokens.indexOf(")", cursor);
+          if (isLessUnsigned(openIndex, closeIndex)) {
+            let currentTree = treeStack.at(-1);
+            currentTree.push(...tokens.slice(cursor, openIndex));
+            currentTree.push([]);
+            treeStack.push(currentTree.at(-1));
+            cursor = openIndex + 1;
+          } else {
+            if (closeIndex == -1) {
+              treeStack.pop().push(...tokens.slice(cursor));
+              cursor = tokens.length;
+            } else {
+              treeStack.pop().push(...tokens.slice(cursor, closeIndex));
+              cursor = closeIndex + 1;
+            }
+          }
+        }
+        return new ParExpression(parExpr, 0);
+      }
+
+      function Variable(name) {
+        this.name = name;
+      }
+
+      function Application(exprA, exprB) {
+        this.exprA = exprA;
+        this.exprB = exprB;
+      }
+
+      function Abstraction(name, expr) {
+        this.name = name;
+        this.expr = expr;
+      }
+
+      function isVar(token) {
+        return /^[^\s@.()]+$/.test(token);
+      }
+
+      class Counter {
+        constructor() {
+          this.stack = [];
+          this.map = new Map();
+        }
+
+        push(name) {
+          if (this.map.has(name)) {
+            this.map.set(name, this.map.get(name) + 1);
+          } else {
+            this.map.set(name, 1);
+          }
+          return this.stack.push(name);
+        }
+
+        pop() {
+          const name = this.stack.pop();
+          const count = this.map.get(name);
+          if (count > 1) {
+            this.map.set(name, count - 1);
+          } else {
+            this.map.delete(name);
+          }
+          return name;
+        }
+
+        has(name) {
+          return this.map.has(name);
+        }
+      }
+
+      function getFreeVars(expression) {
+        let exprStack = [expression];
+        let bindCounter = new Counter();
+        let freeVars = new Set();
+        while (exprStack.length) {
+          const expr = exprStack.pop();
+          if (expr instanceof Variable) {
+            if (!bindCounter.has(expr.name)) {
+              freeVars.add(expr.name);
+            }
+          } else if (expr instanceof Abstraction) {
+            bindCounter.push(expr.name);
+            exprStack.push(1);
+            exprStack.push(expr.expr);
+          } else if (expr instanceof Application) {
+            exprStack.push(expr.exprB);
+            exprStack.push(expr.exprA);
+          } else {
+            bindCounter.pop();
+          }
+        }
+        return freeVars;
+      }
+
+      function isDigit(token) {
+        return /^\d+$/.test(token);
+      }
+
+      function churchNumBody(num) {
+        let body = new Variable("x");
+        for (let i = 0; i < num; i++) {
+            body = new Application(new Variable("f"), body);
+        }
+        return body;
+      }
+
+      function churchNum(num) {
+        return new Abstraction("f", new Abstraction("x", churchNumBody(num)));
+      }
+
+      function applyChurchNums(vars, body) {
+        let applied = body;
+        for (const token of vars) {
+          const abst = new Abstraction(token, applied);
+          if (token == "1") {
+              applied = new Application(abst, new Abstraction("f", new Variable("f")));
+          } else if (isDigit(token)) {
+              applied = new Application(abst, churchNum(+token));
+          }
+        }
+        return applied;
+      }
+
+      class AbstractionTarget {
+        constructor(abst, parExpr) {
+          this.abst = abst;
+          this.parExpr = parExpr;
+        }
+
+        getExpr() {
+          return this.abst;
+        }
+
+        getInner() {
+          return this.abst.expr;
+        }
+
+        set(expr) {
+          this.abst.expr = expr;
+        }
+
+        withParExpr(newParExpr) {
+          return new AbstractionTarget(this.abst, newParExpr);
+        }
+      }
+
+      class ApplicationTarget {
+        constructor(appl, ab, parExpr) {
+          this.appl = appl;
+          this.ab = ab;
+          this.parExpr = parExpr;
+        }
+
+        getExpr() {
+          return this.appl;
+        }
+
+        getInner() {
+          if (this.ab == "A") {
+            return this.appl.exprA;
+          } else if (this.ab == "B") {
+            return this.appl.exprB;
+          } else {
+            trace("Invalid ab in ApplicationTarget:");
+            trace(this);
+            return null;
+          }
+        }
+
+        set(expr) {
+          if (this.ab == "A") {
+            this.appl.exprA = expr;
+          } else if (this.ab == "B") {
+            this.appl.exprB = expr;
+          } else {
+            trace("Invalid ab in ApplicationTarget:");
+            trace(this);
+          }
+        }
+
+        withParExpr(newParExpr) {
+          return new ApplicationTarget(this.appl, this.ab, newParExpr);
+        }
+      }
+
+      class ChurchNumsTarget {
+        constructor(target, parExpr) {
+          this.target = target;
+          this.parExpr = parExpr;
+        }
+
+        getExpr() {
+          return this.target.getExpr();
+        }
+
+        getInner() {
+          return this.target.getInner();
+        }
+
+        set(expr) {
+          this.target.set(expr);
+        }
+
+        withParExpr(newParExpr) {
+          return new ChurchNumsTarget(this.target, newParExpr);
+        }
+      }
+
+      class ChurchNumsApplier {
+        constructor(target) {
+          this.target = target;
+        }
+
+        apply() {
+          let inner = this.target.getInner();
+          this.target.set(applyChurchNums(getFreeVars(inner), inner));
+        }
+      }
+
+      class Parser {
+        constructor(topParExpr) {
+          this.topAbst = new Abstraction("@", null);
+          this.topTarget = new AbstractionTarget(this.topAbst, topParExpr);
+          this.targetStack = [this.topTarget];
+        }
+
+        genListBody(endName, parBody) {
+          let body = new Variable(endName);
+          for (let i = parBody.getLength() - 1; i >= 0; i--) {
+            let appl = new Application(new Variable("f"), null);
+            body = new Abstraction("f", new Application(appl, body));
+            let target = new ApplicationTarget(appl, "B", parBody.getElem(i));
+            this.targetStack.push(target);
+          }
+          return body;
+        }
+
+        genList(endName, parBody) {
+          return new Abstraction(endName, this.genListBody(endName, parBody));
+        }
+
+        parseExtension(parExpr, currentTarget) {
+          const extension = parExpr.raw[parExpr.startIndex + 2];
+          const extra = parExpr.raw[parExpr.startIndex + 3];
+          const dot = parExpr.rawDotIndex();
+          if (parExpr.raw[parExpr.startIndex + 1] != "@"
+            || typeof extension != "string" || typeof extra != "string"
+            || dot < parExpr.startIndex + 3) {
+            trace("Invalid extension:");
+            trace(parExpr);
+            return null;
+          }
+          const parBody = new ParExpression(parExpr.raw, dot + 1);
+          const parTail = new ParExpression(parExpr.raw, dot + 2);
+          if (extension == "b") {
+            let name = "@b";
+            if (extra != ".") {
+              name += " " + extra;
+            }
+            let abst = new Abstraction(name, new Variable(name));
+            let appl = new Application(abst, null);
+            let target = new ApplicationTarget(appl, "B", parBody);
+            this.targetStack.push(target);
+            return appl;
+          } else if (extension == "c") {
+            let newTarget = currentTarget.withParExpr(parTail);
+            this.targetStack.push(newTarget);
+            return null;
+          } else if (extension == "churchnums") {
+            let newTarget = new ChurchNumsTarget(currentTarget, parBody);
+            let applier = new ChurchNumsApplier(newTarget);
+            this.targetStack.push(applier);
+            this.targetStack.push(newTarget);
+            return null;
+          } else if (extension == "def") {
+            if (extra == ".") {
+              trace("Def extension with no name:");
+              trace(parExpr);
+            }
+            let abst = new Abstraction(extra, null);
+            let abstTarget = new AbstractionTarget(abst, parTail);
+            let parHead = new ParExpression(parExpr.raw[dot + 1], 0);
+            let appl = new Application(abst, null);
+            let applTarget = new ApplicationTarget(appl, "B", parHead);
+            this.targetStack.push(applTarget);
+            this.targetStack.push(abstTarget);
+            return appl;
+          } else if (extension == "list") {
+            if (extra == ".") {
+              extra = "e";
+            }
+            return this.genList(extra, parBody);
+          } else {
+            let newTarget = currentTarget.withParExpr(parBody);
+            this.targetStack.push(newTarget);
+            return null;
+          }
+        }
+
+        genAbstraction(parExpr) {
+          let dot = parExpr.rawDotIndex();
+          let pushedNewTarget = false;
+          let expr = null;
+          for (let i = dot - 1; i > parExpr.startIndex; i--) {
+            if (typeof parExpr.raw[i] == "string") {
+              expr = new Abstraction(parExpr.raw[i], expr);
+              if (!pushedNewTarget) {
+                let parBody = new ParExpression(parExpr.raw, dot + 1);
+                let newTarget = new AbstractionTarget(expr, parBody);
+                this.targetStack.push(newTarget);
+                pushedNewTarget = true;
+              }
+            }
+          }
+          if (!pushedNewTarget) {
+            trace("Zero-parameter abstraction:");
+            trace(parExpr);
+          }
+          return expr;
+        }
+
+        genApplication(parExpr) {
+          let expr = new Application(null, null);
+          let targetA = new ApplicationTarget(expr, "A", parExpr.getElem(0));
+          let targetB = new ApplicationTarget(expr, "B", parExpr.getElem(1));
+          this.targetStack.push(targetA);
+          this.targetStack.push(targetB);
+          for (let i = 2; i < parExpr.getLength(); i++) {
+            expr = new Application(expr, null);
+            let targetElem = new ApplicationTarget(expr, "B", parExpr.getElem(i));
+            this.targetStack.push(targetElem);
+          }
+          return expr;
+        }
+
+        parse() {
+          while (this.targetStack.length) {
+            let target = this.targetStack.pop();
+            if (target instanceof ChurchNumsApplier) {
+              target.apply();
+              continue;
+            }
+            let parExpr = target.parExpr;
+            if (parExpr.getLength() < 1) {
+              trace("Zero-length expression:");
+              trace(parExpr);
+            } else if (parExpr.getLength() == 1) {
+              if (typeof parExpr.raw == "string") {
+                if (isVar(parExpr.raw)) {
+                  target.set(new Variable(parExpr.raw));
+                } else {
+                  trace("Invalid variable name:");
+                  trace(parExpr);
+                }
+              } else if (!parExpr.isLambd()) {
+                let newParExpr = parExpr.getElem(0);
+                let newTarget = target.withParExpr(newParExpr);
+                this.targetStack.push(newTarget);
+              } else if (parExpr.raw[parExpr.startIndex + 1] == "@") {
+                target.set(this.parseExtension(parExpr, target));
+              } else {
+                target.set(this.genAbstraction(parExpr));
+              }
+            } else {
+              target.set(this.genApplication(parExpr));
+            }
+          }
+        }
+      }
+
+      function parseParExpr(parExpr) {
+        let parser = new Parser(parExpr);
+        parser.parse();
+        return parser.topAbst.expr;
+      }
+
+      function unparse(expr) {
+        let unparsed = "";
+        let stack = [expr];
+        while (stack.length) {
+          let elem = stack.pop();
+          if (typeof elem == "string") {
+            unparsed += elem;
+          } else if (elem instanceof Variable) {
+            unparsed += elem.name;
+          } else if (elem instanceof Abstraction) {
+            unparsed += "@" + elem.name + ".";
+            stack.push(elem.expr);
+          } else if (elem instanceof Application) {
+            if (elem.exprA instanceof Abstraction) {
+              if (elem.exprB instanceof Variable) {
+                unparsed += "(";
+                stack.push(")" + elem.exprB.name);
+                stack.push(elem.exprA);
+              } else {
+                unparsed += "(";
+                stack.push(")");
+                stack.push(elem.exprB);
+                stack.push(")(");
+                stack.push(elem.exprA);
+              }
+            } else {
+              if (elem.exprB instanceof Variable) {
+                stack.push(" " + elem.exprB.name);
+                stack.push(elem.exprA);
+              } else {
+                stack.push(")");
+                stack.push(elem.exprB);
+                stack.push("(");
+                stack.push(elem.exprA);
+              }
+            }
+          } else {
+            trace("Invalid element in expression:");
+            trace(elem);
+            trace(expr);
+          }
+        }
+        return unparsed;
+      }
+
+      function decodeChurchNumBody(f, x, body) {
+        let expr = body;
+        let i = 0;
+        while (expr instanceof Application
+          && expr.exprA instanceof Variable && expr.exprA.name == f) {
+          expr = expr.exprB;
+          i++;
+        }
+        if (expr instanceof Variable && expr.name == x) {
+          return i;
+        } else {
+          return -1;
+        }
+      }
+
+      class NonParserTargetStack {
+        constructor(topExpr) {
+          this.topAbst = new Abstraction("@", topExpr);
+          this.topTarget = new AbstractionTarget(this.topAbst, null);
+          this.targetStack = [this.topTarget];
+        }
+
+        getLength() {
+          return this.targetStack.length;
+        }
+
+        pop() {
+          return this.targetStack.pop();
+        }
+
+        pushAbstractionTarget(abst) {
+          return this.targetStack.push(new AbstractionTarget(abst, null));
+        }
+
+        pushApplicationTarget(appl, ab) {
+          return this.targetStack.push(new ApplicationTarget(appl, ab, null));
+        }
+
+        getTop() {
+          return this.topAbst.expr;
+        }
+      }
+
+      function restoreNums(topExpr) {
+        let targetStack = new NonParserTargetStack(topExpr);
+        while (targetStack.getLength()) {
+          let target = targetStack.pop();
+          let inner = target.getInner();
+          if (inner instanceof Abstraction) {
+            if (inner.expr instanceof Variable) {
+              if (inner.name == inner.expr.name) {
+                target.set(new Variable("1"));
+              }
+            } else if (inner.expr instanceof Abstraction) {
+              let n = decodeChurchNumBody(inner.name,
+                inner.expr.name, inner.expr.expr);
+              if (n >= 0) {
+                target.set(new Variable(n.toString()));
+              } else {
+                targetStack.pushAbstractionTarget(inner);
+              }
+            } else {
+              targetStack.pushAbstractionTarget(inner);
+            }
+          } else if (inner instanceof Application) {
+            targetStack.pushApplicationTarget(inner, "B");
+            targetStack.pushApplicationTarget(inner, "A");
+          }
+        }
+        return targetStack.getTop();
+      }
+
+      function parse(data) {
+        return parseParExpr(parseParTree(tokenize(data)));
+      }
+
+      // SEMANTICS //
+
+      function deepCopy(expr) {
+        let targetStack = new NonParserTargetStack(expr);
+        while (targetStack.getLength()) {
+          let target = targetStack.pop();
+          let inner = target.getInner();
+          if (inner instanceof Variable) {
+            target.set(new Variable(inner.name));
+          } else if (inner instanceof Abstraction) {
+            let abst = new Abstraction(inner.name, inner.expr);
+            target.set(abst);
+            targetStack.pushAbstractionTarget(abst);
+          } else if (inner instanceof Application) {
+            let appl = new Application(inner.exprA, inner.exprB);
+            target.set(appl);
+            targetStack.pushApplicationTarget(appl, "B");
+            targetStack.pushApplicationTarget(appl, "A");
+          }
+        }
+        return targetStack.getTop();
+      }
+
+      function rfvSubstitute(lexpr, name, rexpr, rfv) {
+        let targetStack = new NonParserTargetStack(lexpr);
+        while (targetStack.getLength()) {
+          let target = targetStack.pop();
+          let inner = target.getInner();
+          if (inner instanceof Variable) {
+            if (inner.name == name) {
+              target.set(deepCopy(rexpr));
+            }
+          } else if (inner instanceof Application) {
+            targetStack.pushApplicationTarget(inner, "B");
+            targetStack.pushApplicationTarget(inner, "A");
+          } else if (inner instanceof Abstraction) {
+            if (inner.name != name) {
+              if (rfv.has(inner.name)) {
+                let rand = 0x1000 + Math.floor(Math.random() * 0xf000);
+                let aname = inner.name + "_" + rand.toString(16);
+                inner = alphaConvert(inner, aname);
+                target.set(inner);
+              }
+              targetStack.pushAbstractionTarget(inner);
+            }
+          }
+        }
+        return targetStack.getTop();
+      }
+
+      function substitute(lexpr, name, rexpr) {
+        if (lexpr instanceof Application && lexpr.exprA instanceof Abstraction
+          && (lexpr.exprA.name == "@b e" || lexpr.exprA.name == "@b b")) {
+          return substitute(fullReduce(lexpr), name, rexpr);
+        } else if (rexpr instanceof Application && rexpr.exprA instanceof Abstraction
+          && (rexpr.exprA.name == "@b b" || rexpr.exprA.name == "@b")) {
+          return substitute(lexpr, name, fullReduce(rexpr));
+        } else {
+          return rfvSubstitute(lexpr, name, rexpr, getFreeVars(rexpr));
+        }
+      }
+
+      function alphaConvert(abst, newName) {
+        abst.expr = substitute(abst.expr, abst.name, new Variable(newName));
+        abst.name = newName;
+        return abst;
+      }
+
+      function reduceExpr(topExpr) {
+        let targetStack = new NonParserTargetStack(topExpr);
+        while (targetStack.getLength()) {
+          let target = targetStack.pop();
+          let inner = target.getInner();
+          if (inner instanceof Application) {
+            if (inner.exprA instanceof Abstraction) {
+              target.set(substitute(inner.exprA.expr,
+                inner.exprA.name, inner.exprB));
+              return [true, targetStack.getTop()];
+            } else {
+              targetStack.pushApplicationTarget(inner, "B");
+              targetStack.pushApplicationTarget(inner, "A");
+            }
+          } else if (inner instanceof Abstraction) {
+            if (inner.expr instanceof Application
+              && inner.expr.exprB instanceof Variable
+              && inner.name == inner.expr.exprB.name
+              && !getFreeVars(inner.expr.exprA).has(inner.name)) {
+              target.set(inner.expr.exprA);
+              return [true, targetStack.getTop()];
+            } else {
+              targetStack.pushAbstractionTarget(inner);
+            }
+          }
+        }
+        return [false, targetStack.getTop()];
+      }
+
+      function fullReduce(topExpr) {
+        let result = reduceExpr(topExpr);
+        while (result[0]) {
+          //postMessage(unparse(result[1]));
+          result = reduceExpr(result[1]);
+        }
+        return result[1];
+      }
+
+      function roundTrip(data) {
+        return unparse(restoreNums(fullReduce(parse(data))));
+      }
+
+      onmessage = (contents) => {
+        postMessage(roundTrip(contents.data));
+      }
+    </script>
+    <script type="text/lambd">
+      @@ c. (Combinator)
+      @@ def Y. (@ g.
+        (@x.g (x x)) (@x.g (x x)))
+
+      @@ def I.(@x.x)
+      @@ def K.(@x y.x)
+      @@ def S.(@x y z.x z (y z))
+      @@ def B.(@x y z.x (y z))
+      @@ def C.(@x y z.x z y)
+      @@ def W.(@x y.x y y)
+      @@ def U.(@x.x x)
+      @@ def omega.U
+      @@ def OMEGA.(omega omega)
+
+      @@ c. (Logic)
+      @@ def #t.
+        (@t f.t)
+      @@ def #f.
+        (@t f.f)
+      @@ def 0?. (@ n.
+        n (@x.#f) #t)
+      @@ def ?:. (@ p a b.
+        p a b)
+      @@ def !. (@ p.
+        @a b.p b a)
+      @@ def &. (@ p q.
+        p q p)
+      @@ def |. (@ p q.
+        p p q)
+      @@ def ^. (@ p q.
+        p (! q) q)
+
+      @@ c. (Pairs)
+      @@ def pair. (@ x y.
+        @f.f x y)
+      @@ def get0. (@ p.
+        p #t)
+      @@ def get1. (@ p.
+        p #f)
+      @@ def #nil.
+        (@x.#t)
+      @@ def nil?. (@ p.
+        p @x y.#f)
+
+      @@ c. (Arithmetic)
+      @@ def ++. (@ n.
+        @f x.f (n f x))
+      @@ def +. (@ m n.
+        m ++ n)
+      @@ def *. (@ m n.
+        @f.m (n f))
+      @@ def **. (@ b e.
+        e b)
+      @@ def --. (@ n.
+        @f x.n (@g h.h (g f)) (@u.x) (@u.u))
+      @@ def -. (@ m n.
+        n -- m)
+
+      @@ c. (Predicates)
+      @@ def <=. (@ m n.
+        0? (- m n))
+      @@ def >=. (@ m n.
+        <= n m)
+      @@ def >. (@ m n.
+        ! (<= m n))
+      @@ def <. (@ m n.
+        ! (>= m n))
+      @@ def =. (@ m n.
+        & (<= m n) (>= m n))
+
+
+      @@ churchnums.
+
+
+      @@ c. (Math)
+      @@ def math:fact. (Y @Y_fact n.
+        (0? n) 1
+          (* (Y_fact (@@b.-- n)) n))
+
+      @@ def math:div. (@ n d.
+        (0? d) #nil
+          ((Y @Y_div d q r.
+              (>= r d)
+                (Y_div d (@@b.++ q) (@@b.- r d))
+                (pair q r))
+            d 0 n))
+
+
+
+      @@c. (Integers)
+
+      @@ def int:abs. (@ n.
+        n @n0.pair #f)
+
+      @@ def int:neg. (@ n.
+        n @n0.pair (! n0))
+
+      @@ def int:inc. (@ n.
+        n @n0 n1.(0? n1)
+          (pair #f 1)
+          (pair n0
+            ((n0 -- ++) n1)))
+
+      @@ def int:add. (@ m n.
+        m @m0 m1.n @n0 n1.pair
+          ((<= m1 n1) n0 m0)
+          ((^ m0 n0)
+            ((<= m1 n1)
+              (- n1 m1)
+              (- m1 n1))
+            (+ m1 n1)))
+
+      @@ def int:dec. (@ n.
+        n @n0 n1.(0? n1)
+          (pair #t 1)
+          (pair n0
+            ((n0 ++ --) n1)))
+
+      @@ def int:sub. (@ m n.
+        int:add m (int:neg n))
+
+      @@ def int:mul. (@ m n.
+        m @m0 m1.n @n0 n1.pair
+          (^ m0 n0)
+          (* m1 n1))
+
+      @@ def int:zero?. (@ n.
+        0? (get1 n))
+
+      @@ def int:neq?. (@ m n.
+        m @m0 m1.n @n0 n1.
+          (& (0? m1) (0? n1)) #f
+            (| (^ m0 n0) (= m1 n1)))
+
+      @@ def int:leq?. (@ m n.
+        m @m0 m1.n @n0 n1.
+          (^ m0 n0)
+            ((& (0? m1) (0? n1)) #t m0)
+            ((m0 >= <=) m1 n1))
+
+
+
+      @@ c. (List)
+
+      @@ def list:append. (@ list list2.
+        @e.list (list2 e))
+
+      @@ def list:appendx. (@ list x.
+        list:append list (pair x))
+
+      @@ def list:del1. (@ list.
+        @e.get1 (list e))
+
+      @@ def list:deln. (@ list n.
+        @e.n get1 (list e))
+
+      @@ def list:pop1. (@ list.
+        pair (list:del1 list)
+          (get0 (list #e)))
+
+      @@ def list:popn. (Y @Y_pop list n dst.
+        (0? n) (pair list dst)
+          ((list:pop1 list) @list1 x.
+              (Y_pop (@@b.list1) (@@b.-- n)
+                (@@b.list:appendx dst x))))
+
+      @@ def list:getSlice. (@ list i n.
+        get1 (list:popn
+            (@@b.list:deln list i) n 1))
+
+      @@ def list:get. (@ list i.
+        get0 (list:deln list i #e))
+
+      @@ def list:setSlice. (@ list i n list2.
+        (list:popn list i 1) @sec0 sec1.
+          list:append sec1 (list:append list2
+              (list:deln sec0 n)))
+
+      @@ def list:set. (@ list i x.
+        list:setSlice list i 1 (pair x))
+
+      @@ def list:delSlice. (@ list i n.
+        list:setSlice list i n 1)
+
+      @@ def list:del. (@ list i.
+        list:delSlice list i 1)
+
+      @@ def list:insert. (@ list i list2.
+        list:setSlice list i 0 list2)
+
+      @@ def list:insertx. (@ list i x.
+        list:insert list i (pair x))
+
+
+      @@ def list:repeat. (@ list n.
+        n (list:append list) list)
+
+      @@ def list:length. (@ list.
+        (Y @Y_len p n.
+          (nil? p) n
+            (Y_len (@@b.get1 p) (@@b.++ n)))
+          (list #nil) 0)
+
+
+      @@ def list:applyAll. (@ func list.
+        (Y @Y_aA func p.
+          (nil? p) func
+            (p @p0 p1.Y_aA (func p0) p1))
+          func (list #nil))
+
+      @@ def list:_print. (@ list.
+        list:applyAll [ (@@b.list) ])
+
+
+
+      @@ c. (Unsigned Decimal Integers)
+
+      @@ def uint10:_extp. (@ p.
+        (nil? p) (pair 0 p) p)
+
+      @@ def uint10:_norm. (Y @Y_norm p s c.
+        (& (nil? p) (0? c)) s
+          ((uint10:_extp p) @p0 p1.
+            (math:div (@@b.+ c p0) 10) @q r.
+              Y_norm (@@b.p1)
+                (@@b.list:appendx s r) q))
+
+      @@ def uint10:norm. (@ n.
+        uint10:_norm (n #nil) 1 0)
+
+      @@ def uint10:inc. (@ n.
+        (@e.(n e) @p0 p1.pair (++ p0) p1))
+
+      @@ def uint10:add. (@ m n.
+        (Y @Y_add pm pn s.
+          (& (nil? pm) (nil? pn)) s
+            ((uint10:_extp pm) @pm0 pm1.
+              (uint10:_extp pn) @pn0 pn1.
+                Y_add (@@b.pm1) pn1
+                  (@@b.list:appendx s
+                    (@@b.+ pm0 pn0))))
+          (m #nil) (n #nil) 1)
+    </script>
+    <script>
+      const WORKER_BLOB = new Blob(
+        Array.prototype.map.call(
+          document.querySelectorAll("script[type='text/js-worker']"),
+          (script) => script.textContent,
+        ),
+        { type: "text/javascript" },
+      );
+      const STANDARD_BLOB = new Blob(
+        Array.prototype.map.call(
+          document.querySelectorAll("script[type='text/lambd']"),
+          (script) => script.textContent,
+        ),
+        { type: "text/plain" },
+      );
+
+      function enableInput() {
+        const btn = document.querySelector("#reduce");
+        const area = document.querySelector("#input");
+        area.disabled = false;
+        btn.disabled = false;
+        btn.innerHTML = "Reduce";
+      }
+      function disableInput() {
+        const btn = document.querySelector("#reduce");
+        const area = document.querySelector("#input");
+        area.disabled = true;
+        btn.disabled = true;
+        btn.innerHTML = "<span class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\"></span> Reducing...";
+      }
+
+      let STANDARD = null;
+
+      function reduce() {
+        const outputArea = document.querySelector("#output");
+        if (window.Worker) {
+          const inputArea = document.querySelector("#input");
+          disableInput();
+          const reduceWorker = new Worker(window.URL.createObjectURL(WORKER_BLOB));
+          reduceWorker.postMessage(STANDARD + inputArea.value);
+          reduceWorker.onmessage = (result) => {
+            outputArea.value = result.data;
+            enableInput();
+          }
+        } else {
+          outputArea.value = "Browser not supported.";
+        }
+      }
+
+      function onclickReduce() {
+        if (!STANDARD) {
+          fetch(new Request(window.URL.createObjectURL(STANDARD_BLOB))).then((response) => {
+            if (response.ok) {
+              response.text().then((text) => {
+                STANDARD = text;
+                reduce();
+              });
+            } else {
+              const outputArea = document.querySelector("#output");
+              outputArea.value = "Network error.";
+            }
+          });
+        } else {
+          reduce();
+        }
+      }
+    </script>
+    <style>
+      textarea {
+        font-family: monospace;
+        width: 100%;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container">
+        <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      Lambda Calculus
+    </h1>
+    
+    <p><a href="/demos/standard.lambd.txt">View Standard Library</a></p>
+
+    <label for="input">Input</label>
+    <textarea id="input" name="input" rows="16">
+@@ c. (Unsigned decimal integers are lists from lowest to
+  highest place value. See the standard library above.)
+
+@@ def %243.
+  (@@list e.3 4 2)
+@@ def %89.
+  (@@list e.9 8)
+
+list:_print (uint10:norm (uint10:add %243 %89))
+    </textarea>
+
+    <button id="reduce" type="button" class="btn btn-primary" autocomplete="off" onclick="onclickReduce()">Reduce</button>
+
+    <label for="output">Output</label>
+    <textarea id="output" name="output" rows="8" disabled></textarea>
+  </div></div></body>

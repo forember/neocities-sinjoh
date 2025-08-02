@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Argument Passing - Articles | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/codehilite.css" rel="stylesheet" type="text/css" media="all">
+    <style>
+      p {
+        margin-bottom: 1em;
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container-small">
+    <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      Argument Passing
+    </h1>
+
+    <h2>Pass by Reference</h2>
+    <p>
+      &ldquo;Pass by reference&rdquo; means that a parameter (callee scope) acts as an alias to the
+      passed argument variable (caller scope); that is, when the parameter is assigned to, it
+      &ldquo;writes through&rdquo; to the argument in caller scope, since both the parameter and
+      argument occupy the same place in memory. This type of argument passing essentially acts like
+      an implicit pointer; note, however, that pass by pointer is different, and a type of pass by
+      value (see definition of pass by value below for discussion).
+    </p>
+    <p>
+      This type of argument passing does not appear in C, but it does appear in C++ with the
+      <code>&amp;</code> parameter modifier:
+    </p>
+
+<div class="codehilite"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">pass_by_reference</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">&amp;</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pass_by_reference</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+    <p>
+      The above program will print out <code>4</code> since when we assign <code>a</code> in
+      <code>pass_by_reference</code> to <code>4</code>, it also modifies <code>b</code> in
+      <code>main</code>, since they are essentially the same variable.
+    </p>
+    <h2>Pass by Value</h2>
+    <p>
+      &ldquo;Pass by value&rdquo; means that a parameter (callee scope) is a copy of the passed
+      argument variable (caller scope); that is, when the parameter is assigned to, it does not
+      affect the argument variable in caller scope, since the parameter and argument variables
+      occupy different places in memory. This is acheived in C by allocating memory on the stack for
+      the parameter and copying the value of the argument to the newly-allocated memory. This is
+      why, historically, structs could only be passed by pointer: stack management was done with
+      fixed offsets for parameters.
+    </p>
+    <p>
+      What is <strong>&ldquo;pass by pointer?&rdquo;</strong> Pass by pointer is a method which can
+      allow a pass by value system to still affect the arguments in caller scope by passing pointers
+      to the arguments by value. By assigning to the dereference of the pointer, the program can
+      acheive pass by reference-type effects. However, if the pointer is directly assigned to
+      another memory location, it effectively &ldquo;decouples&rdquo; the parameter and argument.
+    </p>
+    <p>
+      All argument passing in C is pass by value:
+    </p>
+
+<div class="codehilite"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+
+<span class="cp">#define ALLOC_INT (malloc(sizeof(int)))</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">pass_by_value</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">pass_by_pointer</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">*</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">    </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ALLOC_INT</span><span class="p">;</span>
+<span class="w">    </span><span class="o">*</span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ALLOC_INT</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ALLOC_INT</span><span class="p">;</span>
+<span class="w">    </span><span class="o">*</span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">23</span><span class="p">;</span>
+<span class="w">    </span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pass_by_value</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;d = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">);</span>
+<span class="w">    </span><span class="n">pass_by_pointer</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;*e = %d</span><span class="se">\n</span><span class="s">*f = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+    <p>
+      The above program will print out:
+    </p>
+
+<div class="codehilite"><pre><span></span><code>d = 16
+*e = 8
+*f = 42
+</code></pre></div>
+
+    <p>
+      The value of <code>d</code> has not been modified since <code>a</code> in
+      <code>pass_by_value</code> exists in a separate location in memory, and as such its assignment
+      does not &ldquo;write through&rdquo; to <code>d</code>. The value pointed to by <code>e</code>
+      has been modified since, although the direct value of <code>b</code> exists in a separate
+      location in memory to <code>e</code>, their value is the same, and as such, they both point to
+      the same place in memory, and so assigning to the dereference of <code>b</code> modifies the
+      value pointed to by <code>e</code>.
+    </p>
+    <p>
+      Another language that only uses pass by value is Java. Although non-primitive types in Java
+      are called &ldquo;reference types,&rdquo; reference types in Java are passed by pointer, hence
+      why the following program outputs <code>8</code>:
+    </p>
+
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">A</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">A</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">pass_by_pointer</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="w">        </span><span class="n">pass_by_pointer</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="na">c</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+    <p>
+      Java actually uses a stack system like C, and like historical C, it uses fixed offsets. This
+      is why primitives in Java always use pointer-width memory in Java unless in an array. This
+      simple fixed-offset system provides some advantages such as faster reflection, which is very
+      important for the powerful runtime optimization of the HotSpot VM.
+    </p>
+    
+    <hr>
+    
+    <div class="text-center">
+      <p>&copy; Emberlynn McKinney</p>
+      <img src="/neocities.png">
+    </div>
+  </div></div></body>
+</html>

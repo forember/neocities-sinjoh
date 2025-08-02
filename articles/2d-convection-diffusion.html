@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convection-Diffusion - Articles | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.css"
+        integrity="sha384-pRsDYiLLocCzWnUN/YEr9TBTTaZOUi5x8adKfqi6Qt44lDaFkoP++x1j2ohSMtdf"
+        crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.js"
+        integrity="sha384-tMzugJpfLv7v0f+KXzNMqNCC6sVzLMM3sCnZDgzy0lcO/0h3sAkEBg/URFcV0JpE"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.addEventListener("load", function(event) {
+            $(".katex-math").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex);
+                $(this).html(html);
+            });
+            $(".katex-display").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex, {displayMode: true});
+                $(this).html(html);
+            });
+        });
+    </script>
+    <style>
+      p {
+        margin-bottom: 1em;
+      }
+      @media (max-width: 576px) {
+        .katex-display {
+          font-size: 65%;
+        }
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container-small">
+    <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      Convection-Diffusion
+    </h1>
+
+    <p>The general <a href="https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation">convection-diffusion equation</a> is</p>
+    <div class="katex-display">
+    \frac{\partial c}{\partial t} =  \nabla\cdot (D \nabla c) -  \nabla\cdot (\vec v\:c) + R
+    </div>
+
+    <p class="mb-0">where</p>
+
+    <ul>
+    <li><span class="katex-math">c\:</span> is concentration.</li>
+    <li><span class="katex-math">D</span> is diffusivity.</li>
+    <li><span class="katex-math">\vec v\:</span> is the velocity field.</li>
+    <li><span class="katex-math">R\:</span> describes &ldquo;sources&rdquo; or &ldquo;sinks&rdquo; of concentration, e.g.
+        chemical reactions.</li>
+    </ul>
+    <p>I want to model this in two dimensions with constant <span class="katex-math">D</span> and
+    <span class="katex-math">\vec v</span>, and <span class="katex-math">R = 0</span></p>
+    <div class="katex-display">
+    \frac{\partial c}{\partial t} = \left(D\frac{\partial^2 c}{\partial x^2} + D\frac{\partial^2 c}{\partial y^2}\right)
+        - \left(v_x\frac{\partial c}{\partial x} + v_y\frac{\partial c}{\partial y}\right)
+    </div>
+
+    <p>And in one dimension in the general case of <span class="katex-math">D</span>, <span class="katex-math">v</span>, and
+    <span class="katex-math">R</span> being dependent on time and location</p>
+    <div class="katex-display">
+    \frac{\partial c}{\partial t} = \frac{\partial (D\frac{\partial c}{\partial x})}{\partial x}
+        - \frac{\partial (vc)}{\partial x} + R.
+    </div>
+
+    <h2>Two Dimensions</h2>
+    <p>Note that for this section, for the functions of time and location defined
+    below, the following shorthands are equivalent</p>
+    <div class="katex-display">
+    f = f(x, y) = f(t, x, y)
+    </div>
+
+    <div class="katex-display">
+    f^*(t, x, y) = f(t + \Delta t, x, y)
+    </div>
+
+    <p>Using the Crank-Nicholson finite difference method, the 2-D equation becomes</p>
+    <div class="katex-display d-xl-none">
+    \begin{array}{lrrl}
+    \frac{c^* - c}{\Delta t} &=\frac12\Bigg(
+    \Bigg[&
+        \bigg(&
+            D\frac{ c^*(x + \Delta x, y) - 2c^*
+                + c^*(x - \Delta x, y)}{(\Delta x)^2}
+            \\[1em] &&+&
+            D\frac{ c^*(x, y + \Delta y) - 2c^*
+                + c^*(x, y - \Delta y)}{(\Delta y)^2}
+        \bigg)
+        \\[1em] &&-
+        \bigg(&
+            v_x\frac{ c^*(x + \Delta x, y) - c^*(x - \Delta x, y)}{2\Delta x}
+            \\[1em] &&+&
+            v_y\frac{ c^*(x, y + \Delta y) - c^*(x, y - \Delta y)}{2\Delta y}
+        \bigg)
+    \Bigg]
+    \\[1em] &+
+    \Bigg[&
+        \bigg(&
+            D\frac{ c(x + \Delta x, y) - 2c
+                + c(x - \Delta x, y)}{(\Delta x)^2}
+            \\[1em] &&+&
+            D\frac{ c(x, y + \Delta y) - 2c
+                + c(x, y - \Delta y)}{(\Delta y)^2}
+        \bigg)
+        \\[1em] &&-
+        \bigg(&
+            v_x\frac{ c(x + \Delta x, y) - c(x - \Delta x, y)}{2\Delta x}
+            \\[1em] &&+&
+            v_y\frac{ c(x, y + \Delta y) - c(x, y - \Delta y)}{2\Delta y}
+        \bigg)
+    \Bigg]
+    \Bigg).
+    \end{array}
+    </div>
+    <div class="katex-display d-none d-xl-block">
+    \begin{array}{lrrl}
+    \frac{c^* - c}{\Delta t} &=\frac12\Bigg(
+    \Bigg[&
+        \bigg(&
+            D\frac{ c^*(x + \Delta x, y) - 2c^*
+                + c^*(x - \Delta x, y)}{(\Delta x)^2}
+            +
+            D\frac{ c^*(x, y + \Delta y) - 2c^*
+                + c^*(x, y - \Delta y)}{(\Delta y)^2}
+        \bigg)
+        \\[1em] &&-
+        \bigg(&
+            v_x\frac{ c^*(x + \Delta x, y) - c^*(x - \Delta x, y)}{2\Delta x}
+            +
+            v_y\frac{ c^*(x, y + \Delta y) - c^*(x, y - \Delta y)}{2\Delta y}
+        \bigg)
+    \Bigg]
+    \\[1em] &+
+    \Bigg[&
+        \bigg(&
+            D\frac{ c(x + \Delta x, y) - 2c
+                + c(x - \Delta x, y)}{(\Delta x)^2}
+            +
+            D\frac{ c(x, y + \Delta y) - 2c
+                + c(x, y - \Delta y)}{(\Delta y)^2}
+        \bigg)
+        \\[1em] &&-
+        \bigg(&
+            v_x\frac{ c(x + \Delta x, y) - c(x - \Delta x, y)}{2\Delta x}
+            +
+            v_y\frac{ c(x, y + \Delta y) - c(x, y - \Delta y)}{2\Delta y}
+        \bigg)
+    \Bigg]
+    \Bigg).
+    \end{array}
+    </div>
+
+    <p>This can be rearranged to</p>
+    <div class="katex-display d-lg-none">
+    \begin{array}{rl}
+    (1 + 2A_x + 2A_y)c^*&
+    - (A_x+B_x)c^*(x+\Delta x,y) \\[1em]&
+    - (A_x-B_x)c^*(x-\Delta x,y) \\[1em]&
+    - (A_y+B_y)c^*(x,y+\Delta y) \\[1em]&
+    - (A_y-B_y)c^*(x,y-\Delta y) \\[1em]
+    = & s
+    \end{array}
+    </div>
+    <div class="katex-display d-none d-lg-block">
+    \begin{array}{rl}
+    (1 + 2A_x + 2A_y)c^*&
+    - (A_x+B_x)c^*(x+\Delta x,y) 
+    - (A_x-B_x)c^*(x-\Delta x,y) \\[1em]&
+    - (A_y+B_y)c^*(x,y+\Delta y) 
+    - (A_y-B_y)c^*(x,y-\Delta y) \\[1em]
+    = & s
+    \end{array}
+    </div>
+
+    <p class="mb-0">where</p>
+
+    <div class="katex-display d-lg-none">
+    \begin{array}{rl}
+    s = (1 - 2A_x - 2A_y)c&
+    + (A_x+B_x)c(x+\Delta x,y) \\[1em]&
+    + (A_x-B_x)c(x-\Delta x,y) \\[1em]&
+    + (A_y+B_y)c(x,y+\Delta y) \\[1em]&
+    + (A_y-B_y)c(x,y-\Delta y)
+    \end{array}
+    </div>
+    <div class="katex-display d-none d-lg-block">
+    \begin{array}{rl}
+    s = (1 - 2A_x - 2A_y)c&
+    + (A_x+B_x)c(x+\Delta x,y) 
+    + (A_x-B_x)c(x-\Delta x,y) \\[1em]&
+    + (A_y+B_y)c(x,y+\Delta y) 
+    + (A_y-B_y)c(x,y-\Delta y)
+    \end{array}
+    </div>
+
+    <div class="katex-display">
+    \begin{array}{lclclcl}
+    A_x &=& \frac{v_x\Delta t}{4\Delta x} &&
+    B_x &=& \frac{D\Delta t}{2(\Delta x)^2} \\[1em]
+    A_y &=& \frac{v_y\Delta t}{4\Delta y} &&
+    B_y &=& \frac{D\Delta t}{2(\Delta y)^2} \\[1em]
+    \end{array}
+    </div>
+
+    <p>This is actually a two-dimensional system of equations at each timestep, which,
+    for a system simulating <span class="katex-math">W\times H</span> &ldquo;active&rdquo; (non boundary condition)
+    nodes, can be represented by the tensor equation</p>
+    <div class="katex-display">
+    \mathbf T\:\mathbf C^* = \mathbf G
+    </div>
+
+    <p class="mb-0">where</p>
+
+    <ul>
+    <li>
+    <p><span class="katex-math">\mathbf T</span> is a constant (time-independent) four-dimensional
+        tensor with shape <span class="katex-math">{\langle W+2},{H+2},{W+2},{H+2\rangle}</span>. We will get
+        back to this.</p>
+    </li>
+    <li>
+    <p><span class="katex-math">\mathbf C^*</span> is a <span class="katex-math">(W+2)\times(H+2)</span> matrix representing
+        the state at the next timestep (the state being calculated).</p>
+    <p><div class="katex-display">
+    \mathbf C^<em> = \begin{bmatrix}
+    c^</em>(0, 0) &amp; \cdots &amp; c^<em>((W+1)\Delta x,0) \\
+    \vdots &amp; \ddots &amp; \vdots \\
+    c^</em>(0,(H+1)\Delta y) &amp; \cdots &amp; c^*((W+1)\Delta x,(H+1)\Delta y)
+    \end{bmatrix}
+    </div></p>
+    </li>
+    <li>
+    <p><span class="katex-math">\mathbf G</span> is a <span class="katex-math">(W+2)\times(H+2)</span> matrix representing
+        the (processed) state at the current timestep (the known state).</p>
+    <p><div class="katex-display">
+    \mathbf G = \begin{bmatrix}
+    g(0, 0) &amp; \cdots &amp; g((W+1)\Delta x,0) \\
+    \vdots &amp; \ddots &amp; \vdots \\
+    g(0,(H+1)\Delta y) &amp; \cdots &amp; g((W+1)\Delta x,(H+1)\Delta y)
+    \end{bmatrix}
+    </div></p>
+    <p><div class="katex-display">
+    g = \begin{cases}
+    s &amp;\text{if}\:(1\le x\le W\Delta x) \land (1\le y\le H\Delta y) \\
+    b^* &amp;\text{if}\:(1\le x\le W\Delta x) \oplus (1\le y\le H\Delta y) \\
+    0 &amp;\text{otherwise}
+    \end{cases}
+    </div></p>
+    <p><span class="katex-math">g</span> and <span class="katex-math">s</span> are functions of time and location defined
+    above, and <span class="katex-math">b</span> is some function of time and location representing
+    the boundary conditions.</p>
+    <p><div class="katex-display">
+    c^* = g\;\text{if}\;\lnot((1\le x\le W\Delta x) \land (1\le y\le H\Delta y))
+    </div></p>
+    </li>
+    </ul>
+    <p><span class="katex-math">\mathbf T</span> really did my head in, so I thought it would be useful to
+    write everything out for a simple case first. For <span class="katex-math">W = 2</span> and
+    <span class="katex-math">H = 2</span>, with dots representing zeros, <span class="katex-math">\mathbf T = {}</span></p>
+    <div class="katex-display">
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \hspace{1.8em}
+    \begin{bmatrix}
+    \cdot & 1 & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \hspace{2.7em}
+    \begin{bmatrix}
+    \cdot & \cdot & 1 & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \hspace{1.8em}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    </div>
+
+    <div class="katex-display">
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ 1 & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \begin{bmatrix}
+    \cdot & {\small k_{-y}} & \cdot & \cdot \\ {\small k_{-x}} & {\small k_\varnothing} & {\small k_{+x}} & \cdot \\ \cdot & {\small k_{+y}} & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \begin{bmatrix}
+    \cdot & \cdot & {\small k_{-y}} & \cdot \\ \cdot & {\small k_{-x}} & {\small k_\varnothing} & {\small k_{+x}} \\ \cdot & \cdot & {\small k_{+y}} & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & 1 \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    </div>
+
+    <div class="katex-display">
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ 1 & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & {\small k_{-y}} & \cdot & \cdot \\ {\small k_{-x}} & {\small k_\varnothing} & {\small k_{+x}} & \cdot \\ \cdot & {\small k_{+y}} & \cdot & \cdot
+    \end{bmatrix}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & {\small k_{-y}} & \cdot \\ \cdot & {\small k_{-x}} & {\small k_\varnothing} & {\small k_{+x}} \\ \cdot & \cdot & {\small k_{+y}} & \cdot
+    \end{bmatrix}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & 1 \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    </div>
+
+    <div class="katex-display">
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    \hspace{1.8em}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & 1 & \cdot & \cdot
+    \end{bmatrix}
+    \hspace{2.7em}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & 1 & \cdot
+    \end{bmatrix}
+    \hspace{1.8em}
+    \begin{bmatrix}
+    \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot \\ \cdot & \cdot & \cdot & \cdot
+    \end{bmatrix}
+    </div>
+
+    <p class="mb-0">where</p>
+
+    <div class="katex-display">
+    k_\varnothing = (1 + 2A_x + 2A_y)
+    </div>
+    <div class="katex-display">
+    \begin{array}{lclclcl}
+    k_{+x} &=& -(A_x + B_x) &&
+    k_{-x} &=& -(A_x - B_x) \\[1em]
+    k_{+y} &=& -(A_y + B_y) &&
+    k_{-y} &=& -(A_y - B_y) \\[1em]
+    \end{array}
+    </div>
+
+    <p>Okay, now this is a bit easier to visualize and understand. The general formula
+    for an element of <span class="katex-math">\mathbf T</span> is</p>
+    <div class="katex-display">
+    \mathbf T_{i,j,m,n} = \begin{cases}
+    k_\varnothing &\text{if}\:a \land i = m \land j = n \\
+    k_{+x} &\text{if}\:a \land i + 1 = m \land j = n \\
+    k_{-x} &\text{if}\:a \land i - 1 = m \land j = n \\
+    k_{+y} &\text{if}\:a \land i = m \land j + 1 = n \\
+    k_{-y} &\text{if}\:a \land i = m \land j - 1 = n \\
+    1 &\text{if}\:((1\le i\le W) \oplus (1\le j\le H)) \land i = m \land j = n \\
+    0 &\text{otherwise}
+    \end{cases}
+    </div>
+
+    <p>where <span class="katex-math">a = ((1\le i\le W) \land (1\le j\le H))</span>.</p>
+    <p>And there we go! We have a full description for the finite difference method
+    for the two-dimensional convection-diffusion equation with constant <span class="katex-math">D</span>
+    and <span class="katex-math">\vec v</span>, and <span class="katex-math">R = 0</span>. I can now write a program to
+    generate <span class="katex-math">\mathbf T</span> and <span class="katex-math">\mathbf G</span>, and solve for
+    <span class="katex-math">\mathbf C^*</span> with something like numpy&rsquo;s
+    <a href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.tensorsolve.html#numpy.linalg.tensorsolve">linalg.tensorsolve</a>. But I&rsquo;ll leave that for another day.</p>
+    
+    <hr>
+    
+    <div class="text-center">
+      <p>&copy; Emberlynn McKinney</p>
+      <img src="/neocities.png">
+    </div>
+  </div></div></body>
+</html>

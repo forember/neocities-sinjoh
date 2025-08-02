@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=480">
+    <title>MATH374 Discrete Structues - USC Notes | Sinjoh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+13px&family=Slabo+27px&display=swap"
+          rel="stylesheet">
+    <!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+    <link href="/style.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/codehilite.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.css"
+        integrity="sha384-pRsDYiLLocCzWnUN/YEr9TBTTaZOUi5x8adKfqi6Qt44lDaFkoP++x1j2ohSMtdf"
+        crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.js"
+        integrity="sha384-tMzugJpfLv7v0f+KXzNMqNCC6sVzLMM3sCnZDgzy0lcO/0h3sAkEBg/URFcV0JpE"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.addEventListener("load", function(event) {
+            $(".katex-math").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex);
+                $(this).html(html);
+            });
+            $(".katex-display").each(function() {
+                var latex = $(this).text();
+                var html = katex.renderToString(latex, {displayMode: true});
+                $(this).html(html);
+            });
+        });
+    </script>
+    <style>
+      img {
+        max-width: 100%;
+      }
+      div.codehilite {
+        overflow-x: scroll;
+      }
+      @media (max-width: 576px) {
+        .katex-display {
+          font-size: 65%;
+        }
+        .codehilite {
+          font-size: 65%;
+        }
+      }
+    </style>
+  </head>
+  <body><div class="text-center"><div class="container-small">
+    <h1 style="margin-top: 0px;">
+      <a href="/" class="no-decoration">
+        <img src="/nb-eye.svg" width="40" height="40" style="position: fixed; top: 2px;">
+        <span style="display: inline-block; width: 40px;"></span>
+      </a>
+      MATH 374 Discrete Structures Notes
+    </h1>
+    <h2>Jan 13 2016</h2>
+    <h3>Section 1.1</h3>
+    <h4>Compound propositions</h4>
+    <hr />
+    <p>The sun shines,   and if      gold price goes up,   then         Euro price goes down.
+    <span class="katex-math">S</span>               <span class="katex-math">\land (</span>   <span class="katex-math">G</span>                   <span class="katex-math">\to</span>        <span class="katex-math">E)</span></p>
+    <hr />
+    <p><span class="katex-math">S \land (G \to E)</span></p>
+    <h5>Well-formed formula (WFF)</h5>
+    <p>Not WFF:</p>
+    <ul>
+    <li><span class="katex-math">p \lor \land q</span></li>
+    <li><span class="katex-math">p)) q \lor ((</span></li>
+    </ul>
+    <h4>Binding Strength</h4>
+    <ol>
+    <li><span class="katex-math">()</span> parentheses</li>
+    <li><span class="katex-math">&lsquo;</span> negation</li>
+    <li><span class="katex-math">\lor</span> or, <span class="katex-math">\land</span> and</li>
+    <li><span class="katex-math">\to</span> implication</li>
+    <li><span class="katex-math">\leftrightarrow</span> biconditional</li>
+    </ol>
+    <h4>Defs</h4>
+    <dl>
+    <dt>Tautology</dt>
+    <dd>proposition true with all possible values of variables (denoted 1)</dd>
+    <dt>Contradiction</dt>
+    <dd>proposition false with all possible values of variables (denoted 0)</dd>
+    <dt>Contingency</dt>
+    <dd>proposition neither Tautology nor Contradiction</dd>
+    </dl>
+    <h4>DeMorgan&rsquo;s Laws</h4>
+    <p><span class="katex-math">(p \lor q)&rsquo; \iff p&rsquo; \land q&rsquo;</span></p>
+    <p><span class="katex-math">(p \land q)&rsquo; \iff p&rsquo; \lor q&rsquo;</span></p>
+    <h4>Sheffor Stroke (NAND)</h4>
+    <p><span class="katex-math">A</span> <span class="katex-math">B</span> <span class="katex-math">A|B</span></p>
+    <hr />
+    <p>T   T   F
+    T   F   T
+    F   T   T
+    F   F   T</p>
+    <p><span class="katex-math">A&rsquo; \iff A|A</span></p>
+    <p><span class="katex-math">(A \land B)&rsquo; \iff A|B</span></p>
+    <p><span class="katex-math">A \land B \iff (A|B)|(A|B)</span></p>
+    <h2>Jan 22 2016</h2>
+    <p>What does P(x,y) mean?</p>
+    <ul>
+    <li>
+    <p>Particular predicate</p>
+    <ul>
+    <li><span class="katex-math">x &gt; y \forall x,y \in Reals</span></li>
+    <li>Person <span class="katex-math">x</span> owns car <span class="katex-math">y</span></li>
+    </ul>
+    </li>
+    <li>
+    <p>Any or all predicates</p>
+    </li>
+    </ul>
+    <hr />
+    <hr />
+    <p><span class="katex-math">\exists ! x~P(x)</span>                          There exists one and only one <span class="katex-math">x</span>
+                                                with property <span class="katex-math">P</span>.</p>
+    <p><span class="katex-math">\exists ! x~(\forall y \in~Reals~ x+y=y)</span>  true</p>
+    <hr />
+    <p>The following two mean the same:</p>
+    <ul>
+    <li><span class="katex-math">(\exists x~P(x)) \land (\forall u~\forall v~ P(u) \land P(v) \to u=v)</span></li>
+    <li><span class="katex-math">\exists x~[P(x) \land (\forall y~P(y) \to x=y)]</span></li>
+    </ul>
+    <p>Predicate WFF</p>
+    <p><span class="katex-math">x \lor y \exists</span> is not WFF</p>
+    <p><span class="katex-math">\forall, \exists</span> bind least</p>
+    <blockquote>
+    <p>SCOPE OF QUANTIFIER</p>
+    </blockquote>
+    <hr />
+    <p>E.g. All parrots are ugly.</p>
+    <blockquote>
+    <p><span class="katex-math">P(x) :~x</span> is parrot<br />
+    <span class="katex-math">U(x) :~x</span> is ugly</p>
+    </blockquote>
+    <p>domain: parrots</p>
+    <blockquote>
+    <p><span class="katex-math">\forall x~U(x)</span></p>
+    </blockquote>
+    <p>domain: animals</p>
+    <blockquote>
+    <p><span class="katex-math">\forall x~[P(x) \to U(x)]</span></p>
+    </blockquote>
+    <p>There is an ugly lion.</p>
+    <blockquote>
+    <p><span class="katex-math">L(x) :~x</span> is lion</p>
+    </blockquote>
+    <p>domain: lions</p>
+    <blockquote>
+    <p><span class="katex-math">\exists x~U(x)</span></p>
+    </blockquote>
+    <p>domain: animals</p>
+    <blockquote>
+    <p><span class="katex-math">\exists x~[L(x) \land U(x)]</span></p>
+    </blockquote>
+    <hr />
+    <p><span class="katex-math">(\forall x~[P(x) \to Q(x)])&rsquo;</span><br />
+    <span class="katex-math">\Leftrightarrow \exists x~[P(x) \to Q(x)]&rsquo;</span><br />
+    <span class="katex-math">\Leftrightarrow \exists x~[P(x) \land Q&rsquo;(x)]</span></p>
+    <hr />
+    <dl>
+    <dt>Predicate WFF is VALID</dt>
+    <dd>
+    <p>if for (all domains, all interpretations of predicate as properties on
+    domain) is always true</p>
+    </dd>
+    </dl>
+    <p>E.g.<br />
+    <span class="katex-math">(\forall x~[P(x) \land Q(x)])</span>
+    <span class="katex-math">\leftrightarrow (\forall x~P(x)) \land (\forall x~Q(x))</span></p>
+    <p>domain: integers</p>
+    <blockquote>
+    <p><span class="katex-math">P(x) :~x</span> is odd<br />
+    <span class="katex-math">Q(x) :~x</span> is even</p>
+    </blockquote>
+    <p><span class="katex-math">F \leftrightarrow (F \land F)</span></p>
+    <p>^ SINGLE INTERPRETATION</p>
+    <hr />
+    <p>IGNORE THIS:</p>
+    <p>For all not integers, both are false, and (false and false) is false, so the
+    WFF is VALID. (???)</p>
+    <hr />
+    <p>E.g.<br />
+    <span class="katex-math">(\forall x~[P(x) \lor Q(x)])</span>
+    <span class="katex-math">\leftrightarrow (\forall x~P(x)) \lor (\forall x~Q(x))</span></p>
+    <p>domain: integers</p>
+    <blockquote>
+    <p><span class="katex-math">P(x) :~x</span> is odd<br />
+    <span class="katex-math">Q(x) :~x</span> is even</p>
+    </blockquote>
+    <p><span class="katex-math">T \leftrightarrow (F \lor F)</span></p>
+    <p>NOT VALID</p>
+    <hr />
+    <h3><span class="katex-math">\text{\S}</span> 1.4 Predicate logic</h3>
+    <p>[Propositional Logic + 4 new laws] :</p>
+    <ul>
+    <li>
+    <dl>
+    <dt>universal instantiation</dt>
+    <dd>
+    <p><span class="katex-math">\forall x~P(x)</span> infers <span class="katex-math">P(c)</span> where c is variable or a constant.</p>
+    </dd>
+    </dl>
+    </li>
+    <li>
+    <dl>
+    <dt>existential instantiation</dt>
+    <dd>
+    <p><span class="katex-math">\exists x~P(x)</span> infers <span class="katex-math">P(c)</span> where c is a constant not used before.</p>
+    </dd>
+    </dl>
+    </li>
+    <li>
+    <dl>
+    <dt>existential generalization</dt>
+    <dd>
+    <p><span class="katex-math">P(c)</span> infers <span class="katex-math">\exists x~P(x)</span></p>
+    </dd>
+    </dl>
+    </li>
+    <li>
+    <dl>
+    <dt>universal generalization</dt>
+    <dd>
+    <p><span class="katex-math">P(x)</span> infers <span class="katex-math">\forall x~P(x)</span> [WARNING: Does not always apply.]</p>
+    </dd>
+    </dl>
+    </li>
+    </ul>
+    <h2>Jan 25 2016</h2>
+    <h3><span class="katex-math">\text{\S}</span> 1.5 Logic Programming</h3>
+    <p>Many popular prog. languages are procedural (C++, Java).</p>
+    <p>Another language paradigm is descriptive/declarative/logical &mdash; You write
+    WFFs and the computer makes inferences from them.</p>
+    <p>Prolog (LOGical PROgramming) is a typical logical programming language.</p>
+    <p>Prolog operates on a database of <em>facts</em> and <em>rules.</em> These things are
+    essentially predicate WFFs. Behind this database is running <em>program inference
+    rules,</em> which does the work of making the inferences.</p>
+    <h4>Example</h4>
+    <dl>
+    <dt>Objects</dt>
+    <dd>
+    <ul>
+    <li>bear</li>
+    <li>fox</li>
+    <li>pine tree</li>
+    <li>grass</li>
+    <li>fish</li>
+    <li>&hellip;</li>
+    </ul>
+    </dd>
+    <dt>Facts</dt>
+    <dd>
+    <ul>
+    <li>eat(deer, grass) <em>[means deer eat grass]</em></li>
+    <li>eat(bear, fish)</li>
+    <li>eat(bear, fox)</li>
+    <li>&hellip;</li>
+    </ul>
+    </dd>
+    <dt>E.g. unary predicates</dt>
+    <dd>
+    <ul>
+    <li>animal(bear) <span class="katex-math">\Rightarrow</span> T</li>
+    <li>animal(grass) <span class="katex-math">\Rightarrow</span> F</li>
+    <li>plant(grass) <span class="katex-math">\Rightarrow</span> T</li>
+    <li>plant(bear) <span class="katex-math">\Rightarrow</span> F</li>
+    </ul>
+    </dd>
+    </dl>
+    <h5>Queries (can use <span class="katex-math">\land, \lor, &lsquo;</span>)</h5>
+    <ul>
+    <li>IS (animal(bear)) <span class="katex-math">\Rightarrow</span> T</li>
+    <li>WHICH (x : eat(x, grass)) <span class="katex-math">\Rightarrow</span> deer</li>
+    <li>WHICH (x : eat(x, grass) <span class="katex-math">\land</span> animal(x)) <span class="katex-math">\Rightarrow</span> deer</li>
+    <li>WHICH (x : eat(bear, x) <span class="katex-math">\land</span> mammal(x)) <span class="katex-math">\Rightarrow</span> fox</li>
+    </ul>
+    <h4>Inference Rule (RESOLUTION)</h4>
+    <p><span class="katex-math">p \lor q</span> and <span class="katex-math">r \lor q&rsquo;</span> infer <span class="katex-math">p \lor r</span><br />
+    i.e. <span class="katex-math">(p \lor q) \land (r \lor q&rsquo;) \to p \lor r</span></p>
+    <h5>SPECIAL CASE</h5>
+    <p><span class="katex-math">(0 \lor q)~and~(r \lor q&rsquo;)~infer~0 \lor r</span><br />
+    <span class="katex-math">q~and~(r \lor q&rsquo;)~infer~r</span><br />
+    <span class="katex-math">q~and~(q \to r)~infer~r</span></p>
+    <h5>Another Example</h5>
+    <p><span class="katex-math">p \lor q \lor t ~and~ r \lor q&rsquo; \lor s ~infer~ (p \lor t) \lor (r \lor s)</span>
+    <span class="katex-math">(p \lor t) \lor q ~and~ (r \lor s) \lor q&rsquo;</span></p>
+    <h5>HORN CLAUSE</h5>
+    <ul>
+    <li>many statements <span class="katex-math">\lor</span>&lsquo;d together</li>
+    <li>at most one is NON-NEGATED</li>
+    </ul>
+    <hr />
+    <p><span class="katex-math">p</span>                                     YES
+    <span class="katex-math">p&rsquo;</span>                                    YES
+    <span class="katex-math">p \lor q</span>                              NO
+    <span class="katex-math">p&rsquo; \lor q&rsquo; \lor r&rsquo; \lor t</span>             YES
+    <span class="katex-math">p&rsquo; \lor q&rsquo;</span>                            YES
+    <span class="katex-math">p \to q \Leftrightarrow p&rsquo; \lor q</span>     YES</p>
+    <hr />
+    <p><span class="katex-math">(p \to q) \land (q \to r) \to (p \to r)</span>
+    <span class="katex-math">p&rsquo; \lor q ~and~ q&rsquo; \lor r ~infer~ p&rsquo; \lor r</span></p>
+    <h4>PROLOG RULES</h4>
+    <ul>
+    <li>eat(y,x) <span class="katex-math">\land</span> animal(x) <span class="katex-math">\to</span> prey(x) <em>[Def. of prey added to database]</em></li>
+    </ul>
+    <p>ACCORDING TO GERSTING:
+    <span class="katex-math">\forall y~\forall x~</span>[eat(y,x) <span class="katex-math">\land</span> animal(x) <span class="katex-math">\to</span> prey(x)]<br />
+    NOT GOOD: gives all as prey</p>
+    <p>CORRECT WAY:
+    call the fewest # of animals &ldquo;prey&rdquo; so that still holds.</p>
+    <hr />
+    <p>If 2 horn clauses allow resolution, the outcome is also horn clause.</p>
+    <p><span class="katex-math">p \lor q&rsquo; ~and~ z&rsquo; \lor r</span> [Resolution does not apply.]</p>
+    <p><span class="katex-math">p \lor q&rsquo; \lor r&rsquo; ~and~ s&rsquo; \lor q \lor t&rsquo;</span> [Resolution does apply.]<br />
+    <span class="katex-math">~infer~ p \lor r&rsquo; \lor s&rsquo; \lor t&rsquo;</span></p>
+    <p>Output must be horn clause because all is <span class="katex-math">\lor</span>&lsquo;d and the one non-negated in
+    the second WFF is removed by resolution.</p>
+    <hr />
+    <p>eat(y,x) <span class="katex-math">\land</span> animal(x) <span class="katex-math">\to</span> prey(x)<br />
+    <em>into Horn clause:</em><br />
+    [eat(y,x)]&rsquo; <span class="katex-math">\lor</span> [animal(x)]&rsquo; <span class="katex-math">\lor</span> prey(x)</p>
+    <p>E.g. y=bear, x=fish :</p>
+    <p>facts: eat(bear,fish); animal(fish)</p>
+    <p>How to match? Universal instantiation.</p>
+    <p>eat(bear,fish) <span class="katex-math">\Rightarrow</span> T</p>
+    <p>animal(fish) <span class="katex-math">\to</span> prey(fish)</p>
+    <h2>Jan 27 2016</h2>
+    <h3>PROLOG RULE</h3>
+    <p>animal(x) <span class="katex-math">\land</span> eat(y,x) <span class="katex-math">\to</span> prey(x)
+    <em>[Def-of prey &mdash; database works out preys.]</em></p>
+    <h4>RECURSIVE RULES</h4>
+    <p>y is in food-chain of x <span class="katex-math">~</span> IFCO(y,x)</p>
+    <p>if eat(x,y) then IFCO(y,x)<br />
+    if IFCO(z,x) <span class="katex-math">\land</span> eat(z,y) then IFCO(y,x)</p>
+    <p>if eat(x,y) then IFCO(y,x)<br />
+    if eat(x,z) <span class="katex-math">\land</span> IFCO(y,z) then IFCO(y,x)</p>
+    <p>if eat(x,y) then IFCO(y,x)<br />
+    if IFCO(z,x) <span class="katex-math">\land</span> IFCO(y,z) then IFCO(y,x)</p>
+    <hr />
+    <p>masculine(John)<br />
+    feminine(Kathy)</p>
+    <p>P(x,y) x is parent of y</p>
+    <p>if masculine(a) <span class="katex-math">\land</span> P(a,x) <span class="katex-math">\land</span> P(x,b) then a is grandfather of b</p>
+    <p>A(x,y) x is ancestor of y</p>
+    <p>if P(x,y) then A(x,y)<br />
+    if A(x,z) <span class="katex-math">\land</span> A(z,y) then A(x,y)</p>
+    <h3><span class="katex-math">\text{\S}</span> 1.6 PROOF OF PROGRAM CORRECTNESS</h3>
+    <p>x input <span class="katex-math">\to</span> P program <span class="katex-math">\to</span> P[x] output</p>
+    <p>P program:</p>
+    <ul>
+    <li><span class="katex-math">s_1</span></li>
+    <li><span class="katex-math">s_2</span></li>
+    <li><span class="katex-math">s_3</span></li>
+    <li><span class="katex-math">\vdots</span></li>
+    <li><span class="katex-math">s_k</span></li>
+    </ul>
+    <p><span class="katex-math">{Q}</span> precondition <span class="katex-math">\to s_i \to {R}</span> postcondition</p>
+    <p><span class="katex-math">\langle {Q},s_i,{R} \rangle</span> HOARE triple</p>
+    <ul>
+    <li><span class="katex-math">{Q}</span></li>
+    <li><span class="katex-math">s_1</span></li>
+    <li><span class="katex-math">{Q_1}</span></li>
+    <li><span class="katex-math">s_2</span></li>
+    <li><span class="katex-math">{Q_2}</span></li>
+    <li><span class="katex-math">\vdots</span></li>
+    <li><span class="katex-math">{Q_{k-1}}</span></li>
+    <li><span class="katex-math">s_k</span></li>
+    <li><span class="katex-math">{R}</span></li>
+    </ul>
+    <p>proof correctness:</p>
+    <p><span class="katex-math">\forall x~[Q(x) \to R[x,P(x)]]</span></p>
+    <p>e.g. compute <span class="katex-math">\sqrt{~}</span></p>
+    <blockquote>
+    <p><span class="katex-math">Q(x):~x&gt;0</span><br />
+    <span class="katex-math">P(x):~\sqrt{x}</span></p>
+    </blockquote>
+    <p><span class="katex-math">\forall x~(x&gt;0 \to (P(x))^2 =x</span>)</p>
+    <p>Program correctness follows from:</p>
+    <ul>
+    <li><span class="katex-math">\langle {Q},s_1,{Q_1} \rangle</span></li>
+    <li><span class="katex-math">\langle {Q_1},s_2,{Q_2} \rangle</span></li>
+    <li><span class="katex-math">\vdots</span></li>
+    <li><span class="katex-math">\langle {Q_{k-1}},s_k,{R} \rangle</span></li>
+    </ul>
+    <p>Gersting says do these steps backward!</p>
+    <hr />
+    <hr />
+    <p>=       Relation between 2 numbers
+            (commutative, associative)</p>
+    <div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="nv">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">y</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">and</span><span class="w"> </span><span class="nv">only</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">x</span>
+</code></pre></div>
+
+<p>=       Assignment of value</p>
+<div class="codehilite"><pre><span></span><code>    x = y (set x to current value of y)
+
+    y = x (set y to current value of x)
+    </code></pre></div>
+
+    <hr />
+    <hr />
+    <ul>
+    <li>{x &gt; 2}</li>
+    <li><code>x = x + 1</code></li>
+    <li>{x &gt; 3}</li>
+    </ul>
+    <hr />
+    <ul>
+    <li>{x = <span class="katex-math">\pi</span>}</li>
+    <li><code>x = x + 1</code></li>
+    <li>{x = <span class="katex-math">\pi</span> + 1}</li>
+    </ul>
+    <hr />
+    <p><span class="katex-math">\langle {Q_i},x=e,{Q_{i+1}} \rangle</span></p>
+    <p>valid if <span class="katex-math">Q_i</span> is <span class="katex-math">Q_{i+1}</span> with e substituded for x everywhere. (???)</p>
+    <h2>Jan 29 2016</h2>
+    <h3><span class="katex-math">\text{\S}</span> 1.6 Proof Correctness</h3>
+    <ul>
+    <li><span class="katex-math">{Q_i}</span> precondition</li>
+    <li><span class="katex-math">x=e</span> (assignment command)</li>
+    <li><span class="katex-math">{Q_{i+1}}</span> postcontition</li>
+    </ul>
+    <p><span class="katex-math">\langle {Q_i}, x=e, {Q_{i+1}} \rangle</span></p>
+    <blockquote>
+    <p>valid if substituting <span class="katex-math">e</span> to place of <span class="katex-math">x</span> in <span class="katex-math">Q_{i+1}</span> gives <span class="katex-math">Q_i</span>.</p>
+    </blockquote>
+    <h4>Code to interchange values of program variables x and y:</h4>
+    <h5>Goal</h5>
+    <p><span class="katex-math">{x=a, y=b}</span></p>
+    <div class="codehilite"><pre><span></span><code>temp = x
+x = y
+y = temp
+    </code></pre></div>
+
+    <p><span class="katex-math">{x=b, y=a}</span></p>
+    <h5>Checking</h5>
+    <p>Go backwards</p>
+    <p><span class="katex-math">{x=b, y=a}</span></p>
+    <div class="codehilite"><pre><span></span><code>y = temp
+    </code></pre></div>
+
+    <p><span class="katex-math">{x=b, temp=a}</span></p>
+    <div class="codehilite"><pre><span></span><code>x = y
+    </code></pre></div>
+
+    <p><span class="katex-math">{y=b, temp=a}</span></p>
+    <div class="codehilite"><pre><span></span><code>temp = x
+    </code></pre></div>
+
+    <p><span class="katex-math">{y=b, x=a} \equiv {x=a, y=b}</span></p>
+    <p>VALID</p>
+    <h4>Problems with the method</h4>
+    <p><span class="katex-math">{x&gt;0, y&gt;0} \to {x+y&gt;0}</span></p>
+    <div class="codehilite"><pre><span></span><code>z = x + y
+    </code></pre></div>
+
+    <p><span class="katex-math">{z&gt;0}</span></p>
+    <h4>Conditional rule</h4>
+    <p><span class="katex-math">s_i</span>:</p>
+    <blockquote>
+    <p>If B</p>
+    <blockquote>
+    <p>then <span class="katex-math">P_1</span></p>
+    <p>else <span class="katex-math">P_2</span></p>
+    </blockquote>
+    <p>End If</p>
+    </blockquote>
+    <p><span class="katex-math">\langle {Q}, s_i, {R} \rangle</span></p>
+    <p>VALID IF:</p>
+    <blockquote>
+    <p><span class="katex-math">\langle {Q \land B}, P_1, {R} \rangle</span></p>
+    <blockquote>
+    <p>AND</p>
+    </blockquote>
+    <p><span class="katex-math">\langle {Q \land B&rsquo;}, P_2, {R} \rangle</span></p>
+    </blockquote>
+    <h5>Example</h5>
+    <p><span class="katex-math">{n=5}</span></p>
+    <div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="nv">n</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="ss">)</span>
+<span class="w">    </span><span class="k">then</span><span class="w"> </span>{<span class="w"> </span><span class="nv">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span>}
+<span class="w">    </span><span class="k">else</span><span class="w"> </span>{<span class="w"> </span><span class="nv">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span>}
+<span class="k">endif</span>
+    </code></pre></div>
+
+    <p><span class="katex-math">{y=6}</span></p>
+    <hr />
+    <p><span class="katex-math">\langle {n=5 \land n \ge 10}, y=100, {y=6} \rangle</span></p>
+    <p><span class="katex-math">{100=6}</span> FALSE</p>
+    <p>This wouldn&rsquo;t be executed anyway.</p>
+    <hr />
+    <p><span class="katex-math">\langle {n=5 \land n&lt;10}, y=n+1, {y=6} \rangle</span></p>
+    <p><span class="katex-math">{n+1=6} \equiv {n=5}</span></p>
+    <p>VALID</p>
+    <h3><span class="katex-math">\text{\S}</span> 2.1 Mathematical Proofs</h3>
+    <dl>
+    <dt>mathematical objects</dt>
+    <dd>
+    <p>integers, reals, points, lines, etc.</p>
+    </dd>
+    </dl>
+    <h2>Definitions, Axioms, Theorems</h2>
+    <p><em>Definitions</em> are about new words; <em>Axioms</em> are things that are supposed to be
+    true; <em>Theorems</em> are things that follow from the definitions and the axioms
+    (possibly through other theorems).</p>
+    <h3>Theorem</h3>
+    <p>Sum of rational and irrational numbers is irrational.</p>
+    <p><span class="katex-math">\forall x~\forall y~(x~rat. \land y~irr. \to x+y~irr.)</span></p>
+    <h4>Proof by contradiction</h4>
+    <p><span class="katex-math">P \to Q</span></p>
+    <p><span class="katex-math">(P \land Q&rsquo; \to 0) \to (P \to Q)</span></p>
+    <p>Assume that x is rat. and y is irr. and x+y is rat.</p>
+    <p><span class="katex-math">x = a / b,~a, b \ne 0~\in integers</span></p>
+    <p><span class="katex-math">x+y = c / d,~c, d \ne 0~\in integers</span></p>
+    <p><span class="katex-math">a/b + y = c/d</span></p>
+    <p><span class="katex-math">y = c/d - a/b = (b c - d a) / (b d)</span></p>
+    <p><span class="katex-math">(b c - d a)</span> and <span class="katex-math">(b d)</span> are integers, and <span class="katex-math">(b d)</span> is nonzero,
+    thus y must be rational. This is a contradiction. This proves</p>
+    <p><span class="katex-math">\forall x~\forall y~(x~rat. \land y~irr. \to x+y~irr.)</span></p>
+    <h3>Definitions</h3>
+    <dl>
+    <dt>Absolute value</dt>
+    <dd>
+    <p>x real</p>
+    <p><span class="katex-math">|x| = \{~ x if x \ge 0 ;~ -x if x &lt; 0</span></p>
+    </dd>
+    </dl>
+    <hr />
+    <dl>
+    <dt>Prime</dt>
+    <dd>
+    <p>n &gt; 1 integer is prime if </p>
+    <p><span class="katex-math">\forall a,b~integers~(ab=n \to a=1 or a=n)</span></p>
+    </dd>
+    </dl>
+    <hr />
+    <dl>
+    <dt>Composite</dt>
+    <dd>
+    <p>n &gt; 1 integer that is not prime</p>
+    </dd>
+    </dl>
+    <hr />
+    <dl>
+    <dt>Perfect Square</dt>
+    <dd>
+    <p>n is a perfect square if exists integer k such that <span class="katex-math">n = k^2</span></p>
+    </dd>
+    </dl>
+    <h3>Counterexample</h3>
+    <p>E.g. All primes are odd. Counterexample: 2</p>
+    <p>E.g. All positive integers are are the sum of 3 perfect squares.</p>
+    <blockquote>
+    <p><span class="katex-math">0 = 0^2 + 0^2 + 0^2</span></p>
+    <p><span class="katex-math">1 = 0^2 + 0^2 + 1^2</span></p>
+    <p><span class="katex-math">2 = 0^2 + 1^2 + 1^2</span></p>
+    <p><span class="katex-math">3 = 1^2 + 1^2 + 1^2</span></p>
+    <p><span class="katex-math">4 = 0^2 + 0^2 + 2^2</span></p>
+    <p>7 is a counterexample.</p>
+    </blockquote>
+    <dl>
+    <dt>Conjecture</dt>
+    <dd>
+    <p>Statement not proved yet, nor counterexample is known.</p>
+    <p>E.g. Goldbach&rsquo;s Conjecture:</p>
+    <p>Every even number at least 6 us a sum of 2 primes.</p>
+    <blockquote>
+    <p>6 = 3 + 3</p>
+    <p>8 = 3 + 5</p>
+    <p>10 = 5 + 5</p>
+    </blockquote>
+    </dd>
+    </dl>
+    <h3>Exhaustive Proof</h3>
+    <p><span class="katex-math">\forall x~P(x)</span> Finite domain has elements <span class="katex-math">x_1, x_2, &hellip;, x_n</span></p>
+    <p>check <span class="katex-math">P(x_1) \land P(x_2) \land &hellip; \land P(x_n)</span></p>
+    <p>E.g. All odd integers between 4 and 8 are prime.</p>
+    <p>domain: 5,7</p>
+    <blockquote>
+    <p>(5 is prime) <span class="katex-math">\land</span> (7 is prime)</p>
+    </blockquote>
+    <p><span class="katex-math">\exists x~P(x)</span> Finite domain has elements <span class="katex-math">x_1, x_2, &hellip;, x_n</span></p>
+    <p>check <span class="katex-math">P(x_1) \lor P(x_2) \lor &hellip; \lor P(x_n)</span></p>
+    <p>E.g. Between 15 and 24, there is a perfect square.</p>
+    <p>domain: 15,16,&hellip;,24</p>
+    <blockquote>
+    <p>(15 is perf. sq.) <span class="katex-math">\lor</span> (16 is perf. sq.) <span class="katex-math">\lor</span> &hellip;
+      <span class="katex-math">\lor</span> (24 is perf. sq.)</p>
+    </blockquote>
+    <h3>Proof by Cases</h3>
+    <p><span class="katex-math">(P_1 \lor P_2 \lor &hellip; \lor P_n) \Leftrightarrow (P_1 \to q) \land (P_2 \to q) \land &hellip; \land (P_n \to q)</span></p>
+    <blockquote>
+    <p>E.g. For pos. integer k, in decimal representation, the last digit <span class="katex-math">k^2</span> is
+      0 or 1 or 4 or 5 or 6.</p>
+    <p>q: The last digit <span class="katex-math">k^2</span> is 0 or 1 or 4 or 5 or 6.
+    I am super sorry. I was not in class this day. I will, however, add some notes
+    here on the topics covered.</p>
+    </blockquote>
+    <h2>Feb 08 2016</h2>
+    <dl>
+    <dt>Theorem</dt>
+    <dd>
+    <p><span class="katex-math">\forall n \ge 0~\in integer~[3|2^{2n}-1]</span></p>
+    </dd>
+    </dl>
+    <p>Proof by induction on n.</p>
+    <blockquote>
+    <p>n = 0 P(0) means <span class="katex-math">3|0</span>, which is true.</p>
+    <p>Inductive step: need to show<span class="katex-math">\forall n \ge 0~(3|2^{2n}-1 \to 3|2^{2(n+1)}-1)</span></p>
+    <blockquote>
+    <p><span class="katex-math">2^{2(n+1)}-1 = 2^{2n+2}-1 = 2^{2n} \times 2^2 -1 = 4 \times 2^{2n} -1</span>
+    <span class="katex-math">= 4 \times 2^{2n} -4 +3</span></p>
+    </blockquote>
+    <p><span class="katex-math">2^{2(n+1)}-1 = 4 \times 2^{2n}-1 = 4 \times 2^{2n} -4 +3</span></p>
+    </blockquote>
+    <p><strong>I am lost. I will finish this out when I understand it.</strong></p>
+    <hr />
+    <p>Consider an <span class="katex-math">m \times m</span> chessboard.</p>
+    <p>A domino can cover two squares. We want to cover the chessboard with dominos,
+    <em>i.e.</em> cover all squares in one layer with no dominos &ldquo;sticking out&rdquo; of the
+    chessboard.</p>
+    <p>Can we cover an <span class="katex-math">m=7</span> chessboard? No; odd # of squares.</p>
+    <p>Can we cover an <span class="katex-math">m=8</span> chessboard with two opposite corners removed? No &mdash;</p>
+    <blockquote>
+    <p>Each domino must cover exactly one dark tile and exactly one light tile. By
+    removing the two corners, we remove tow of the same color. Therefore, there
+    is not a corresponding tile of the opposite color for each tile, and the
+    board cannot be covered.</p>
+    </blockquote>
+    <dl>
+    <dt>Theorem</dt>
+    <dd>
+    <p><span class="katex-math">\forall n \ge 1~ 2^n \times 2^n</span> chessboard minus a field has a domino
+    cover &mdash; call this P(n).</p>
+    <p><em>Isn&rsquo;t this false? I guess let&rsquo;s just go with it&hellip;</em></p>
+    <p>Proof by induction</p>
+    <p>Inductive step: <span class="katex-math">\forall n \ge 1~ P(n) \to P(n+1)</span></p>
+    <p>Consider a <span class="katex-math">2^{n+1} \times 2^{n+1}</span> chessboard with a field removed.</p>
+    <p><em>We somehow have a three-space domino&hellip; This makes no damn sense&hellip; But
+    sure.</em></p>
+    <p><em>Somehow proof! Bad example, I say!</em></p>
+    <p><strong>I&rsquo;ll add better examples at some point.</strong></p>
+    </dd>
+    </dl>
+    <hr />
+    <p><span class="katex-math">P(1) \land [\forall n \ge 1~ P(n) \to P(n+1)]~\to~(\forall n \ge 1~ P(n))</span></p>
+    <p><span class="katex-math">P(1) \land [\forall n \ge 1~ P(1) \land P(2) \land &hellip; \land P(n) \to P(n+1)]~\to~(\forall n \ge 1~ P(n))</span></p>
+    <hr />
+    <dl>
+    <dt>Theorem</dt>
+    <dd>
+    <p>Only \$3 and \$4 coins.</p>
+    <p><span class="katex-math">\forall n \ge 6</span> \$n can be paid exactly &mdash; P(n)</p>
+    </dd>
+    </dl>
+    <p>Base case: P(6): 6 = 3 + 3</p>
+    <p>Inductive step: ??? &mdash; this is what it is:</p>
+    <blockquote>
+    <p>P(7): 7 = 3 + 4<br />
+    P(8): 8 = 4 + 4<br />
+    P(n): n = (n-2) + 3</p>
+    </blockquote>
+    <p><em>Finally, one that makes sense!</em></p>
+    <p><em>Apparently we can also do this with the first form&hellip; Practical!</em></p>
+    <p><em>Actually, I bet this will be making a flat algorithm, which is actually kinda</em>
+    <em>cool. I hope that&rsquo;s what this is.</em></p>
+    <p>Base case: P(6)</p>
+    <p>Inductive step: &mdash;</p>
+    <blockquote>
+    <p>n = 3 + 3 + &hellip; + 4 + 4<br />
+    n+1 = 3 + &hellip; + 4 + 4 + 4</p>
+    <p>n = 4 + 4 + &hellip; + 4 + 4
+    n+1 = 3 + 3 + 3 + &hellip; 4 + 4</p>
+    </blockquote>
+    <p><em>Ah. Just a different kind of branching.</em></p>
+    <h2>Feb 10 2016</h2>
+    <dl>
+    <dt>Theorem</dt>
+    <dd>
+    <p><span class="katex-math">\forall n \ge 2~ \text{integer} n \text{can be written as a product of primes}</span></p>
+    </dd>
+    </dl>
+    <p>Proof by 2nd principle of induction:</p>
+    <blockquote>
+    <p>Base case: P(2): 2 is prime</p>
+    <p>Inductive step: to show that <span class="katex-math">\forall n \ge 2~ P(2) \land P(3) \land &hellip; \land P(n) \to P(n+1)</span></p>
+    <p>Consider <span class="katex-math">n+1</span>. Cases:</p>
+    <ul>
+    <li>
+    <p><span class="katex-math">n+1</span> is prime</p>
+    </li>
+    <li>
+    <p>not: <span class="katex-math">n+1 = a \times b</span></p>
+    </li>
+    </ul>
+    <p><span class="katex-math">1 &lt; a,b &lt; n+1 \text{infers} 2 \le a,b \le n</span></p>
+    <p>P(a) and P(b) are part of hypothesis.</p>
+    <p><span class="katex-math">a = p_1 \times p_2 \times &hellip; \times p_i</span></p>
+    <p><span class="katex-math">b = q_1 \times q_2 \times &hellip; \times p_i</span></p>
+    <p><span class="katex-math">n+1 = a \times b = p_1 \times p_2 \times &hellip; \times p_k \times q_1 \times q_2 \times &hellip; \times q_l</span></p>
+    </blockquote>
+    <h3>Pitfalls</h3>
+    <p>Bad base cases can propogate errors.</p>
+    <h3>Harmonic numbers</h3>
+    <p><span class="katex-math">H_n = {1 \over 1} + {1 \over 2} + {1 \over 3} + &hellip; + {1 \over n}</span></p>
+    <dl>
+    <dt>Theorem</dt>
+    <dd>
+    <p><span class="katex-math">\forall n \ge 1~ H_{2^n} \ge 1 + {n \over 2}</span></p>
+    </dd>
+    </dl>
+    <p><em>We&rsquo;re goin&rsquo; to Alaska!</em></p>
+    <h4>Proof</h4>
+    <p><span class="katex-math">P(1):~ H_2 \ge 1 + {1 \over 2}</span></p>
+    <p><span class="katex-math">\forall n \ge 1~ P(n) \to P(n+1)</span></p>
+    <p><span class="katex-math">P(n+1):~ H_{2^{n+1}} \ge 1 + {n+1 \over 2}</span></p>
+    <p><span class="katex-math">H_{2^{n+1}} = (1 + 1/2 + 1/3 + &hellip; + 1/(2^n))+(1/(2^n +1) + &hellip; + 1/(2^{n+1}))</span></p>
+    <p><em>Alaska!</em></p>
+    <h3>Recall de Morgan</h3>
+    <p><em>Let&rsquo;s generalize!</em></p>
+    <p><em>It is a math class, after all.</em></p>
+    <p><span class="katex-math">\forall n \ge 2~ (P_1 \lor P_2 \lor &hellip; \lor P_n)&rsquo; \Leftrightarrow {P_1}&rsquo; \land {P_2}&rsquo; \land &hellip; \land {P_n}&rsquo;</span></p>
+    <p><span class="katex-math">Q(2):~ (P_1 \lor P_2)&rsquo; \Leftrightarrow {P_1}&rsquo; \land {P_2}&rsquo;</span></p>
+    <p><span class="katex-math">P(n+1):~ (P_1 \lor P_2 \lor &hellip; \lor P_n \lor P_{n+1})&rsquo; \Leftrightarrow ((P_1 \lor P_2 \lor &hellip; \lor P_n) \lor P_{n+1})&rsquo; \Leftrightarrow (P_1 \lor P_2 \lor &hellip; \lor P_n)&rsquo; \land P_{n+1}&rsquo; \Leftrightarrow Q(n) \land {P_{n+1}}&rsquo; \Leftrightarrow {P_1}&rsquo; \land {P_2}&rsquo; \land &hellip; \land {P_n}&rsquo; \land {P_{n+1}}&rsquo;</span></p>
+    <h3>Description by characters</h3>
+    <p>H = those positive integers that can be defined in English with at most 200
+    characters</p>
+    <p>We can define the smallest positive integer not in H as &ldquo;the smallest positive
+    integer that cannot be defined in English with at most 200 characters.&rdquo; <em>But
+    wait!</em> We just defined it in less than 200 characters!</p>
+    <h2>Feb 15 2016</h2>
+    <p>Test goes up to induction (<span class="katex-math">\text{\S}</span> 2.2).</p>
+    <dl>
+    <dt>Domination</dt>
+    <dd>
+    <p><span class="katex-math">A \lor 1 \Leftrightarrow 1</span><br />
+    <span class="katex-math">A \land 0 \Leftrightarrow 0</span></p>
+    </dd>
+    </dl>
+    <h3>Backus-Naur Normal Form</h3>
+    <p>BNNF is actually really cool. You can check out more about its extended form
+    <a href="https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_Form">EBNF on Wikipedia</a></p>
+    <p>Example:</p>
+    <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>    <span class="o">::=</span> A|B|C|...|Z
+<span class="p">&lt;</span><span class="nc">digit</span><span class="p">&gt;</span>     <span class="o">::=</span> 0|1|2|3|4|5|6|7|8|9
+<span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;</span><span class="o">::=</span> <span class="p">&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>|<span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>|<span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;&lt;</span><span class="nc">digit</span><span class="p">&gt;</span>
+    </code></pre></div>
+
+    <h4>Palindromes</h4>
+    <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>    <span class="o">::=</span> A|B|C|...|Z
+<span class="p">&lt;</span><span class="nc">palindrome</span><span class="p">&gt;</span><span class="o">::=</span> <span class="p">&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>|λ|<span class="p">&lt;</span><span class="nc">A</span><span class="p">&gt;&lt;</span><span class="nc">palindrome</span><span class="p">&gt;&lt;</span><span class="nc">A</span><span class="p">&gt;</span>|<span class="p">&lt;</span><span class="nc">B</span><span class="p">&gt;&lt;</span><span class="nc">palindrome</span><span class="p">&gt;&lt;</span><span class="nc">B</span><span class="p">&gt;</span>
+              |...|<span class="p">&lt;</span><span class="nc">Z</span><span class="p">&gt;&lt;</span><span class="nc">palindrome</span><span class="p">&gt;&lt;</span><span class="nc">Z</span><span class="p">&gt;</span>
+    </code></pre></div>
+
+    <p><code>λ</code> is the empty string.</p>
+    <h4>Words with no consecutive vowels</h4>
+    <div class="codehilite"><pre><span></span><code><span class="p">&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>    <span class="o">::=</span> A|B|C|...|Z
+<span class="p">&lt;</span><span class="nc">vowel</span><span class="p">&gt;</span>     <span class="o">::=</span> A|E|I|O|U
+<span class="p">&lt;</span><span class="nc">consonant</span><span class="p">&gt;</span> <span class="o">::=</span> B|C|D|...|Z
+<span class="p">&lt;</span><span class="nc">word</span><span class="p">&gt;</span>      <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">letter</span><span class="p">&gt;</span>|λ|<span class="p">&lt;</span><span class="nc">word</span><span class="p">&gt;&lt;</span><span class="nc">consonant</span><span class="p">&gt;</span>
+              |<span class="p">&lt;</span><span class="nc">word</span><span class="p">&gt;&lt;</span><span class="nc">consonant</span><span class="p">&gt;&lt;</span><span class="nc">vowel</span><span class="p">&gt;</span>
+    </code></pre></div>
+
+    <p>Show:</p>
+    <ul>
+    <li>
+    <p>Word does not have 2 consecutive vowels.</p>
+    <ul>
+    <li><code>&lt;letter&gt;</code> <span class="katex-math">\checkmark</span></li>
+    <li><code>λ</code> <span class="katex-math">\checkmark</span></li>
+    <li><code>&lt;word&gt;&lt;cons&gt;</code> <span class="katex-math">\checkmark</span></li>
+    <li><code>&lt;word&gt;&lt;cons&gt;&lt;vowel&gt;</code> <span class="katex-math">\checkmark</span></li>
+    </ul>
+    </li>
+    <li>
+    <p>If word without 2 cons. vowels, is valid <code>&lt;word&gt;</code>.</p>
+    <ul>
+    <li>
+    <p>Last Letter</p>
+    <ul>
+    <li>
+    <p>Empty String <span class="katex-math">\checkmark</span></p>
+    </li>
+    <li>
+    <p>Consonant</p>
+    <ul>
+    <li>Length 1 word <span class="katex-math">\checkmark</span></li>
+    <li>More length <span class="katex-math">\checkmark</span></li>
+    </ul>
+    </li>
+    <li>
+    <p>Vowel</p>
+    <ul>
+    <li>Length 1 word <span class="katex-math">\checkmark</span></li>
+    <li>A consonant before <span class="katex-math">\checkmark</span></li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    </ul>
+    <hr />
+    <p><span class="katex-math">A_1 \lor A_2 \lor &hellip; \lor A_n</span> does not depend on parenthesation.</p>
+    <dl>
+    <dt>Recursive definition</dt>
+    <dd>
+    <p><span class="katex-math">A_1 \lor A_2</span> by truth table.</p>
+    <p><span class="katex-math">n \ge 2~ A_1 \lor A_2 \lor &hellip; \lor A_{n+1}</span> def
+    <span class="katex-math">(A_1 \lor A_2 \lor &hellip; \lor A_n) \lor A_{n+1}</span></p>
+    <p>Theorem: definition is the same for all parenthesation for n items</p>
+    <p>By hypothesis <span class="katex-math">(&hellip;) \lor A_{n+1} = \text{same}</span>.</p>
+    <p><span class="katex-math">(A_1 \lor &hellip; \lor A_k) \lor (A_{k+1} \lor &hellip; \lor A_{n+1})</span></p>
+    <p><span class="katex-math">(A_1 \lor &hellip; \lor A_k) \lor (A_{k+1} \lor (A_{k+2}\lor &hellip;\lor A_{n+1}))</span></p>
+    <p><span class="katex-math">P \lor (Q \lor R) \Leftrightarrow (P \lor Q) \lor R</span></p>
+    <p><span class="katex-math">((A_1 \lor &hellip; \lor A_k) \lor A_{k+1}) \lor (A_{k+2}\lor &hellip;\lor A_{n+1})</span></p>
+    <p>This means we can move any parenthesation.</p>
+    </dd>
+    </dl>
+    <h3>61</h3>
+    <p>n straight lines, no 2 parallel, no 3 through a point</p>
+    <p>cut the plane into <span class="katex-math">(n^2 + n +2)/2</span> pieces</p>
+    <p>P(1): <span class="katex-math">(1^2 + 1 + 2)/2 = 2</span></p>
+    <p>Assume n+1 lines, n black, 1 red.</p>
+    <p>Black lines make <span class="katex-math">(n^2 + n +2)/2</span> pieces.</p>
+    <p>Does adding in the red line make there be
+    <span class="katex-math">((n+1)^2 + n+1 +2)/2</span>?</p>
+    <p>Adding red line adds n intersection points (no parallel).</p>
+    <p>This adds n+1 pieces.</p>
+    <p><span class="katex-math">(n^2 + n +2)/2 + n+1 = ((n+1)^2 + n+1 +2)/2</span></p>
+    <hr />
+    <p>I spent my time getting this working, so I can&rsquo;t cover #74&hellip;
+    Sorry. My laptop is dead. It has to do with
+    <em>arithmetic progression:</em></p>
+    <p><span class="katex-math">\Sigma = a + (a+b) + &hellip; + (a+(n-1)b)</span></p>
+    <p><span class="katex-math">\Sigma = (a+(n-1)b) + (a+(n-2)b) + &hellip; + a</span></p>
+    <p><span class="katex-math">2\Sigma = n(2a+nb)</span></p>
+    <p><span class="katex-math">\Sigma = n(2a+nb)/2</span></p>
+    <hr />
+    <h3><span class="katex-math">\text{\S}</span> 2.4: Recursive algorithms</h3>
+    <p>L list of numbers</p>
+    <p>Find the biggest item.</p>
+    <p>There is a simple non-recursive algorithm.</p>
+    <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">find_max</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-Infinity&#39;</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">u</span>
+    </code></pre></div>
+
+    <p>Recursive algorithm:</p>
+    <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">find_max</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Lp</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">find_max</span><span class="p">(</span><span class="n">Lp</span><span class="p">))</span>
+    </code></pre></div>
+
+    <h4>Sorting</h4>
+    <h5>Bubble sort</h5>
+    <p>Iterative:</p>
+    <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">bubble_sort</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">L</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+    </code></pre></div>
+
+    <h5>Merge sort</h5>
+    <p>Recursive:</p>
+    <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">merge_sort</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="n">I</span> <span class="n">will</span> <span class="n">fill</span> <span class="n">this</span> <span class="n">out</span> <span class="n">later</span>
+    </code></pre></div>
+
+    <h4>Binary search</h4>
+    <p>The example is in the book. I cannot type this fastvon my phone</p>
+    <h3><span class="katex-math">\text{\S}</span> 2.3 Correction of Loops</h3>
+    <p>[Q]</p>
+    <div class="codehilite"><pre><span></span><code><span class="k">while</span><span class="w"> </span><span class="nv">B</span><span class="w"> </span><span class="nv">holds</span>
+<span class="w">    </span><span class="nv">P</span>
+<span class="k">end</span>
+    </code></pre></div>
+
+    <p>[R]</p>
+    <p>i counts the loops</p>
+    <p><span class="katex-math">[Q_0]: i=0</span></p>
+    <p>P</p>
+    <p><span class="katex-math">[Q_1]</span></p>
+    <p>P</p>
+    <p><span class="katex-math">[Q_2]</span></p>
+    <p><span class="katex-math">\vdots</span></p>
+    <p><span class="katex-math">Q_r \land B</span>
+    Sorry about that. I hadn&rsquo;t eaten yet today.</p>
+    <h3>Pre-Test Review</h3>
+    <h4>6</h4>
+    <p><span class="katex-math">\exists x~ P(x) \to \forall x~ P(x)</span></p>
+    <p>Show that this is not valid.</p>
+    <p>We need a domain and a meaning for <span class="katex-math">P(x)</span>.</p>
+    <blockquote>
+    <p>Domain: integers</p>
+    <p><span class="katex-math">P(x):~ x \ge 0</span></p>
+    <p><span class="katex-math">\exists x~ P(x)</span>: true (example: <span class="katex-math">x=5</span>)</p>
+    <p><span class="katex-math">\forall x~ P(x)</span>: false (counterexample: <span class="katex-math">x=-1</span>)</p>
+    </blockquote>
+    <ol start="8">
+    <li>
+    <p>Going backwards.</p>
+    <p>{A1=c,A2=a,A3=b}</p>
+    <div class="codehilite"><pre><span></span><code>A2=temp
+    </code></pre></div>
+
+    <p>{A1=c,temp=a,A3=b}</p>
+    <div class="codehilite"><pre><span></span><code>A3=A2
+    </code></pre></div>
+
+    <p>{A1=c,temp=a,A2=b}</p>
+    <div class="codehilite"><pre><span></span><code>A1=A3
+    </code></pre></div>
+
+    <p>{A3=c,temp=a,A2=b}</p>
+    <div class="codehilite"><pre><span></span><code>temp=A1
+    </code></pre></div>
+
+    <p>{A3=c,A1=a,A2=b} <span class="katex-math">\equiv</span> {A1=a,A2=b,A3=c}</p>
+    </li>
+    <li>
+    <p><span class="katex-math">\forall n\in\mathbb{N}^\ast~[2+7+12+&hellip;+(5n+2)=2+2n^2+4n+{n^2+n \over 2}]</span></p>
+    <p><span class="katex-math">P(n):~2+7+12+&hellip;+(5n+2)=2+2n^2+4n+{n^2+n \over 2}</span></p>
+    <p><span class="katex-math">P(1):~2+7=2+2(1)^2+4(1)+{1^2+1 \over 2}=2+2+4+1=2+7</span></p>
+    <p><span class="katex-math">P(n+1):~2+7+&hellip;+(5n+2)+(5(n+1)+2)=2+2(n+1)^2+4(n+1)+{(n+1)^2+n+1 \over 2}</span></p>
+    </li>
+    </ol>
